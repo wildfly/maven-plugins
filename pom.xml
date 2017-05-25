@@ -31,6 +31,12 @@
     <name>WildFly plugins</name>
     <description>Aggregate of all wildfly util plugins</description>
 
+    <scm>
+        <connection>scm:git:https://github.com/wildfly/maven-plugins.git</connection>
+        <developerConnection>scm:git:https://github.com/wildfly/maven-plugins.git</developerConnection>
+        <url>https://github.com/wildfly/maven-plugins</url>
+    </scm>
+
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
@@ -38,9 +44,23 @@
             <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
         </license>
     </licenses>
-
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.github.danielflower.mavenplugins</groupId>
+                <artifactId>multi-module-maven-release-plugin</artifactId>
+                <version>2.1.3</version>
+                <configuration>
+                    <releaseGoals>
+                        <releaseGoal>deploy</releaseGoal>
+                    </releaseGoals>
+                    <serverId>github</serverId>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     <modules>
+        <module>plugin-parent</module>
         <module>quickstart-documentation-plugin</module>
     </modules>
 

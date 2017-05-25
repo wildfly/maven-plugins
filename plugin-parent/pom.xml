@@ -39,12 +39,6 @@
         </license>
     </licenses>
 
-    <scm>
-          <connection>scm:git:https://github.com/wildfly/maven-plugins.git</connection>
-          <developerConnection>scm:git:https://github.com/wildfly/maven-plugins.git</developerConnection>
-          <url>https://github.com/wildfly/maven-plugins</url>
-    </scm>
-
     <properties>
         <version.org.wildfly.checkstyle-config>1.0.5.Final</version.org.wildfly.checkstyle-config>
     </properties>
