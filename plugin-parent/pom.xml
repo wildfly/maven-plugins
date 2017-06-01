@@ -15,18 +15,17 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.jboss</groupId>
         <artifactId>jboss-parent</artifactId>
         <version>23</version>
-        <relativePath/>
+        <relativePath />
     </parent>
     <groupId>org.wildfly.maven.plugins</groupId>
     <artifactId>plugin-parent</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>pom</packaging>
     <name>WildFly plugins parent</name>
     <description>Parent for wildfly maven plugins</description>
@@ -94,4 +93,8 @@
             </plugins>
         </pluginManagement>
     </build>
+
+  <scm>
+    <tag>maven-plugins-1.0.0</tag>
+  </scm>
 </project>
