@@ -20,12 +20,12 @@
     <parent>
         <groupId>org.wildfly.maven.plugins</groupId>
         <artifactId>plugin-parent</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2-SNAPSHOT</version>
         <relativePath>../plugin-parent/pom.xml</relativePath>
     </parent>
     <groupId>org.wildfly.maven.plugins</groupId>
     <artifactId>licenses-plugin</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
     <name>Licenses plugin</name>
     <description>Maven plugin that fills in versions of artifacts listed in licenses.xml</description>
