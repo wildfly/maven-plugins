@@ -25,7 +25,7 @@
     </parent>
     <groupId>org.wildfly.maven.plugins</groupId>
     <artifactId>plugin-parent</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <packaging>pom</packaging>
     <name>WildFly plugins parent</name>
     <description>Parent for wildfly maven plugins</description>
@@ -93,4 +93,8 @@
             </plugins>
         </pluginManagement>
     </build>
+
+  <scm>
+    <tag>maven-plugins-1.0.1</tag>
+  </scm>
 </project>
