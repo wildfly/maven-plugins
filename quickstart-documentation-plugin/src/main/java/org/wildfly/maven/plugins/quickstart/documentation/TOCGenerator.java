@@ -37,10 +37,14 @@ public class TOCGenerator {
             && (!ignoredDirs.contains(entry.getFileName().toString())))
         ) {
             dirs.forEach(path -> {
-                try {
-                    allMetaData.add(parseReadme(path));
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if (Files.exists(path.resolve("README.md"))){
+                    try {
+                        allMetaData.add(parseReadme(path));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }else{
+                    System.out.println(String.format("Directory %s doesn't contain README.md, skipping", path));
                 }
             });
         }
@@ -102,8 +106,8 @@ public class TOCGenerator {
         private String summary;
         private String targetProduct;
         private String source;
-        private String prerequisites;
-        private String[] technologies;
+        private String prerequisites = "";
+        private String[] technologies = {};
 
         private MetaData(String name) {
             this.name = name;
@@ -128,7 +132,7 @@ public class TOCGenerator {
         }
 
         String getTechnologiesAsString() {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             for (int i = 0; i < technologies.length; i++) {
                 sb.append(technologies[i].trim());
                 if (i < technologies.length - 1) {
