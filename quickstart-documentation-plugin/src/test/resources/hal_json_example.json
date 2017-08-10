@@ -1,0 +1,141 @@
+{
+  "_links": {
+    "type": {
+      "href": "http://127.0.0.1:8888/rest/type/node/coding_resource"
+    },
+    "http://127.0.0.1:8888/rest/relation/node/coding_resource/field_related_product": [
+      {
+        "href": "http://127.0.0.1:8888/node/33895?_format=hal_json"
+      }
+    ],
+    "http://127.0.0.1:8888/rest/relation/node/coding_resource/field_tags": [
+      {
+        "href": "http://127.0.0.1:8888/taxonomy/term/7635?_format=hal_json"
+      },
+      {
+        "href": "http://127.0.0.1:8888/taxonomy/term/1155?_format=hal_json"
+      }
+    ]
+  },
+  "_embedded": {
+    "http://127.0.0.1:8888/rest/relation/node/coding_resource/field_related_product": [
+      {
+        "_links": {
+          "self": {
+            "href": "http://127.0.0.1:8888/node/33895?_format=hal_json"
+          },
+          "type": {
+            "href": "http://127.0.0.1:8888/rest/type/node/product"
+          }
+        },
+        "uuid": [
+          {
+            "value": "48a3f108-d582-4507-b168-89619ac708f7"
+          }
+        ]
+      }
+    ],
+    "http://127.0.0.1:8888/rest/relation/node/coding_resource/field_tags": [
+      {
+        "_links": {
+          "self": {
+            "href": "http://127.0.0.1:8888/taxonomy/term/7635?_format=hal_json"
+          },
+          "type": {
+            "href": "http://127.0.0.1:8888/rest/type/taxonomy_term/tags"
+          }
+        },
+        "uuid": [
+          {
+            "value": "846c0bc0-7df1-4b9f-b9a2-ab7a2b9e0939"
+          }
+        ],
+        "lang": "en"
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "http://127.0.0.1:8888/taxonomy/term/1155?_format=hal_json"
+          },
+          "type": {
+            "href": "http://127.0.0.1:8888/rest/type/taxonomy_term/tags"
+          }
+        },
+        "uuid": [
+          {
+            "value": "59664075-5b7f-4efa-b511-4e69f5b18218"
+          }
+        ],
+        "lang": "en"
+      }
+    ]
+  },
+  "path": [
+    {
+      "alias": "/quickstarts/test-creating-with-rest"
+    }
+  ],
+  "title": [
+    {
+      "value": "Testing creating via REST"
+    }
+  ],
+  "body": [
+    {
+      "value": "Just a simple test",
+      "format": "rhd_html",
+      "summary": ""
+    }
+  ],
+  "field_author": [
+    {
+      "value": "Oliver Kiss, Lukas Fryc"
+    }
+  ],
+  "field_contributors": [
+    {
+      "value": "Sande Gilda"
+    },
+    {
+      "value": "Pete Muir"
+    }
+  ],
+  "field_description": [
+    {
+      "value": "<p>The tasks quickstart includes a persistence unit and sample persistence code to demonstrate how to use JPA for database access in JBoss EAP.</p>\r\n",
+      "format": "rhd_html"
+    }
+  ],
+  "field_level": [
+    {
+      "value": "Intermediate"
+    }
+  ],
+  "field_published_date": [
+    {
+      "value": "2016-01-14"
+    }
+  ],
+  "field_resource_type": [
+    {
+      "value": "quickstart"
+    }
+  ],
+  "field_source_link": [
+    {
+      "uri": "https://github.com/jboss-developer/jboss-eap-quickstarts",
+      "title": "",
+      "options": []
+    }
+  ],
+  "field_technologies": [
+    {
+      "value": "JPA, Arquillian"
+    }
+  ],
+  "field_version": [
+    {
+      "value": "7.0.0.GA"
+    }
+  ]
+}
