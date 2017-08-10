@@ -22,10 +22,11 @@ public class Tag {
     }
 
     public Tag(String uuid, String tid, String lang) {
+        final String drupalLocation = "http://127.0.0.1:8888";
         this.lang = lang;
         this.uuid = Arrays.asList(new ValueWrapper(uuid));
-        this.self = new HALLink.Builder((String.format("/taxonomy/term/%s?_format=hal_json", tid))).build();
-        this.type = new HALLink.Builder("/rest/type/taxonomy_term/tags").build();
+        this.self = new HALLink.Builder((String.format(drupalLocation + "/taxonomy/term/%s?_format=hal_json", tid))).build();
+        this.type = new HALLink.Builder(drupalLocation + "/rest/type/taxonomy_term/tags").build();
     }
 
     public HALLink getSelf() {

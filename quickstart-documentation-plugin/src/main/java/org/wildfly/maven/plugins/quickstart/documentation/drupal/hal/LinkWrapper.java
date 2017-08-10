@@ -9,7 +9,7 @@ import java.util.List;
  *         Copyright 2017 Red Hat, Inc. and/or its affiliates.
  */
 public class LinkWrapper {
-    private final String url;
+    private final String uri;
     private final String title;
     private final List<String> options;
 
@@ -18,13 +18,13 @@ public class LinkWrapper {
     }
 
     public LinkWrapper(String url, String text, List<String> options) {
-        this.url = url;
+        this.uri = url;
         this.title = text;
         this.options = options;
     }
 
-    public String getUrl() {
-        return url;
+    public String getUri() {
+        return uri;
     }
 
     public String getTitle() {

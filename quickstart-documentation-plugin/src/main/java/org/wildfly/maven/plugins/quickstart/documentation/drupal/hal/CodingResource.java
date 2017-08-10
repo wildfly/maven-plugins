@@ -1,5 +1,6 @@
 package org.wildfly.maven.plugins.quickstart.documentation.drupal.hal;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -16,16 +17,16 @@ public class CodingResource {
     @Link
     private HALLink type;
 
-    @EmbeddedResource("/rest/relation/node/coding_resource/field_related_product")
+    @EmbeddedResource("http://127.0.0.1:8888/rest/relation/node/coding_resource/field_related_product")
     private List<Product> relatedProduct;
 
-    @EmbeddedResource("/rest/relation/node/coding_resource/field_tags")
+    @EmbeddedResource("http://127.0.0.1:8888/rest/relation/node/coding_resource/field_tags")
     private List<Tag> fieldTags;
 
-    @Link("/rest/relation/node/coding_resource/field_related_product")
+    @Link("http://127.0.0.1:8888/rest/relation/node/coding_resource/field_related_product")
     private List<HALLink> relatedProductLink;
 
-    @Link("/rest/relation/node/coding_resource/field_tags")
+    @Link("http://127.0.0.1:8888/rest/relation/node/coding_resource/field_tags")
     private List<HALLink> tagsLink;
 
     private List<PathWrapper> path;
@@ -59,7 +60,7 @@ public class CodingResource {
     @JsonProperty("field_source_link")
     private List<LinkWrapper> sourceLink;
 
-    public CodingResource(String path, String title, String body) {
+    public CodingResource(URI typeURI, String path, String title, String body) {
         this.path = Collections.singletonList(new PathWrapper(path));
         this.title = Collections.singletonList(new ValueWrapper(title));
         this.body = Collections.singletonList(new TextWithSummaryWrapper(body, ""));
@@ -73,7 +74,7 @@ public class CodingResource {
         this.technologies = new ArrayList<>();
         this.sourceLink = new ArrayList<>();
 
-        this.type = new HALLink.Builder("/rest/type/node/coding_resource").build();
+        this.type = new HALLink.Builder(typeURI).build();
         this.relatedProductLink = new ArrayList<>();
         this.tagsLink = new ArrayList<>();
 

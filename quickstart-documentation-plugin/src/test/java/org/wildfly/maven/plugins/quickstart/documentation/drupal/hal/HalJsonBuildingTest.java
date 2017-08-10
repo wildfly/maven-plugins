@@ -1,6 +1,7 @@
 package org.wildfly.maven.plugins.quickstart.documentation.drupal.hal;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.stream.Stream;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -21,8 +22,9 @@ import static org.junit.Assert.fail;
 public class HalJsonBuildingTest {
     @Test
     public void assertHalJsonStructure() {
-        CodingResource cr = new CodingResource("/quickstarts/test-creating-with-rest", "Testing", "Hello World");
-        cr.addRelatedProduct("33895", "48a3f108-d582-4507-b168-89619ac708f7");
+        final URI typeUri = URI.create("http://127.0.0.1:8888/rest/type/node/coding_resource");
+        CodingResource cr = new CodingResource(typeUri, "/quickstarts/test-creating-with-rest", "Testing take 5", "Hello World");
+        cr.addRelatedProduct("33900", "48a3f108-d582-4507-b168-89619ac708f7");
         cr.addTag("7635", "846c0bc0-7df1-4b9f-b9a2-ab7a2b9e0939");
         cr.addTag("1155", "59664075-5b7f-4efa-b511-4e69f5b18218");
         cr.addDescription("Some description");
@@ -48,8 +50,8 @@ public class HalJsonBuildingTest {
 
             assertFalse("property '_embedded' is missing", rootNode.path("_embedded").isMissingNode());
             assertTrue("'_embedded size is not 2", rootNode.path("_embedded").size() == 2);
-            assertTrue("'_embedded[]./rest/relation/node/coding_resource/field_tags size is not 2",
-                    rootNode.path("_embedded").findPath("/rest/relation/node/coding_resource/field_tags").size() == 2);
+            assertTrue("'_embedded[].http://127.0.0.1:8888/rest/relation/node/coding_resource/field_tags size is not 2",
+                    rootNode.path("_embedded").findPath("http://127.0.0.1:8888/rest/relation/node/coding_resource/field_tags").size() == 2);
 
             assertFalse("property 'path' is missing", rootNode.path("path").isMissingNode());
             assertTrue("property 'path' is not an array", rootNode.path("path").isArray());
@@ -70,12 +72,11 @@ public class HalJsonBuildingTest {
                 assertFalse(String.format("property '%s' is missing", s), rootNode.path(s).isMissingNode());
                 assertTrue(String.format("property '%s' is not an array", s), rootNode.path(s).isArray());
                 assertFalse(String.format("property '%s[].value' is missing", s), rootNode.path(s).findPath("value").isMissingNode());
-                assertFalse(String.format("property '%s[].format' is missing", s), rootNode.path(s).findPath("format").isMissingNode());
             });
 
             assertFalse("property 'field_source_link' is missing", rootNode.path("field_source_link").isMissingNode());
             assertTrue("property 'field_source_link' is not an array", rootNode.path("field_source_link").isArray());
-            assertFalse("property 'field_source_link[].url' is missing", rootNode.path("field_source_link").findPath("url").isMissingNode());
+            assertFalse("property 'field_source_link[].uri' is missing", rootNode.path("field_source_link").findPath("uri").isMissingNode());
             assertFalse("property 'field_source_link[].title' is missing", rootNode.path("field_source_link").findPath("title").isMissingNode());
         } catch (IOException e) {
             fail(e.getMessage());

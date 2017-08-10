@@ -24,9 +24,10 @@ public class Product {
      * @param uuid UUID of the node
      */
     public Product(final String nid, final String uuid) {
+        final String drupalLocation = "http://127.0.0.1:8888";
         this.uuid = Arrays.asList(new ValueWrapper(uuid));
-        this.self = new HALLink.Builder((String.format("/node/%s?_format=hal_json", nid))).build();
-        this.type = new HALLink.Builder("/rest/type/node/product").build();
+        this.self = new HALLink.Builder((String.format(drupalLocation + "/node/%s?_format=hal_json", nid))).build();
+        this.type = new HALLink.Builder(drupalLocation + "/rest/type/node/product").build();
     }
 
     public HALLink getSelf() {
