@@ -1,6 +1,6 @@
 package org.wildfly.maven.plugins.quickstart.documentation.drupal.hal;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import dk.nykredit.jackson.dataformat.hal.HALLink;
@@ -17,17 +17,10 @@ public class Product {
 
     private List<ValueWrapper> uuid;
 
-    /**
-     * Basic constructor, requires the node id and the uuid
-     *
-     * @param nid  Node Id
-     * @param uuid UUID of the node
-     */
-    public Product(final String nid, final String uuid) {
-        final String drupalLocation = "http://127.0.0.1:8888";
-        this.uuid = Arrays.asList(new ValueWrapper(uuid));
-        this.self = new HALLink.Builder((String.format(drupalLocation + "/node/%s?_format=hal_json", nid))).build();
-        this.type = new HALLink.Builder(drupalLocation + "/rest/type/node/product").build();
+    public Product(String nid, String uuid) {
+        this.uuid = Collections.singletonList(new ValueWrapper(uuid));
+        this.self = new HALLink.Builder((String.format("%%drupalLocation%%/node/%s?_format=hal_json", nid))).build();
+        this.type = new HALLink.Builder("%drupalLocation%/rest/type/node/product").build();
     }
 
     public HALLink getSelf() {

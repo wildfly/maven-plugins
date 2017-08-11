@@ -1,7 +1,7 @@
 package org.wildfly.maven.plugins.quickstart.documentation.drupal.hal;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import dk.nykredit.jackson.dataformat.hal.HALLink;
@@ -22,11 +22,10 @@ public class Tag {
     }
 
     public Tag(String uuid, String tid, String lang) {
-        final String drupalLocation = "http://127.0.0.1:8888";
         this.lang = lang;
-        this.uuid = Arrays.asList(new ValueWrapper(uuid));
-        this.self = new HALLink.Builder((String.format(drupalLocation + "/taxonomy/term/%s?_format=hal_json", tid))).build();
-        this.type = new HALLink.Builder(drupalLocation + "/rest/type/taxonomy_term/tags").build();
+        this.uuid = Collections.singletonList(new ValueWrapper(uuid));
+        this.self = new HALLink.Builder((String.format("%%drupalLocation%%/taxonomy/term/%s?_format=hal_json", tid))).build();
+        this.type = new HALLink.Builder("%drupalLocation%/rest/type/taxonomy_term/tags").build();
     }
 
     public HALLink getSelf() {
