@@ -1,4 +1,4 @@
-package org.wildfly.maven.plugins.quickstart.documentation.drupal.hal;
+package org.wildfly.maven.plugins.quickstart.documentation.drupal.json.hal;
 
 import java.io.IOException;
 import java.util.stream.Stream;

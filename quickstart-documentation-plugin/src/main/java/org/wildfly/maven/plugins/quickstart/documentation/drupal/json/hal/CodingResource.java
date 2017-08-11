@@ -1,4 +1,4 @@
-package org.wildfly.maven.plugins.quickstart.documentation.drupal.hal;
+package org.wildfly.maven.plugins.quickstart.documentation.drupal.json.hal;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -129,14 +129,22 @@ public class CodingResource {
         this.body.add(new TextWithSummaryWrapper(body, ""));
     }
 
-    public void addRelatedProduct(String nid, String uuid) {
-        final Product p = new Product(nid, uuid);
+    public void addRelatedProduct(Product p) {
         this.relatedProductLink.add(p.getSelf());
         this.relatedProduct.add(p);
     }
 
+    public void addRelatedProduct(String nid, String uuid) {
+        final Product p = new Product(nid, uuid);
+        this.addRelatedProduct(p);
+    }
+
     public void addTag(String tid, String uuid) {
         final Tag t = new Tag(uuid, tid);
+        this.addTag(t);
+    }
+
+    public void addTag(Tag t) {
         this.fieldTags.add(t);
         this.tagsLink.add(t.getSelf());
     }

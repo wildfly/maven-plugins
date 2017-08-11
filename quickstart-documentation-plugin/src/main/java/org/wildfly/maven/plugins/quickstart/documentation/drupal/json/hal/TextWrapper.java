@@ -1,4 +1,6 @@
-package org.wildfly.maven.plugins.quickstart.documentation.drupal.hal;
+package org.wildfly.maven.plugins.quickstart.documentation.drupal.json.hal;
+
+import java.util.Objects;
 
 /**
  * @author Jason Porter <jporter@redhat.com>
@@ -24,5 +26,19 @@ public class TextWrapper {
 
     public String getFormat() {
         return format;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TextWrapper that = (TextWrapper) o;
+        return Objects.equals(getValue(), that.getValue()) &&
+                Objects.equals(getFormat(), that.getFormat());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getValue(), getFormat());
     }
 }

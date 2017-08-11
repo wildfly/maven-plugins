@@ -1,4 +1,6 @@
-package org.wildfly.maven.plugins.quickstart.documentation.drupal.hal;
+package org.wildfly.maven.plugins.quickstart.documentation.drupal.json.hal;
+
+import java.util.Objects;
 
 /**
  * @author Jason Porter <jporter@redhat.com>
@@ -19,5 +21,18 @@ public class TextWithSummaryWrapper extends TextWrapper {
 
     public String getSummary() {
         return summary;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TextWithSummaryWrapper that = (TextWithSummaryWrapper) o;
+        return Objects.equals(getSummary(), that.getSummary());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getSummary());
     }
 }
