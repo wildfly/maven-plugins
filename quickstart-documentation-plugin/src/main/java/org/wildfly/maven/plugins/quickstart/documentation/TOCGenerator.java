@@ -1,11 +1,13 @@
 package org.wildfly.maven.plugins.quickstart.documentation;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -35,10 +37,14 @@ public class TOCGenerator {
             && (!ignoredDirs.contains(entry.getFileName().toString())))
         ) {
             dirs.forEach(path -> {
-                try {
-                    allMetaData.add(MetaData.parseReadme(path));
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if (Files.exists(path.resolve("README.md"))){
+                    try {
+                        allMetaData.add(MetaData.parseReadme(path));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }else{
+                    System.out.println(String.format("Directory %s doesn't contain README.md, skipping", path));
                 }
             });
         }
