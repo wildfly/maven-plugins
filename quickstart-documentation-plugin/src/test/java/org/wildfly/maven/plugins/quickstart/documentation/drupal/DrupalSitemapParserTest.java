@@ -13,8 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.atMost;
 import static org.mockito.Mockito.verify;
@@ -36,17 +35,17 @@ public class DrupalSitemapParserTest {
     @Test
     public void testGetAllLocationsOfType() throws Exception {
         DrupalSitemapParser parser = new DrupalSitemapParser(sitemapInputstream, mavenLog);
-        assertTrue(parser.getAllLocationsOfType("quickstarts").size() > 0);
+        assertThat(parser.getAllLocationsOfType("quickstarts").size() > 0).isTrue();
         verifyZeroInteractions(mavenLog);
     }
 
     @Test
     public void testGetAllLocationsOfTypeContainsExpectedEntries() throws Exception {
         DrupalSitemapParser parser = new DrupalSitemapParser(sitemapInputstream, mavenLog);
-        assertTrue(parser.getAllLocationsOfType("quickstarts").containsAll(Arrays.asList(
+        assertThat(parser.getAllLocationsOfType("quickstarts")).contains(
                 new SitemapEntry("/quickstarts/eap/inter-app"),
                 new SitemapEntry("/quickstarts/eap/bean-validation"),
-                new SitemapEntry("/quickstarts/eap/cdi-decorator"))));
+                new SitemapEntry("/quickstarts/eap/cdi-decorator"));
         verifyZeroInteractions(mavenLog);
     }
 
@@ -54,8 +53,8 @@ public class DrupalSitemapParserTest {
     public void testGetAllLocationsOfTypeDoesNotContainUnexpectedEntries() throws Exception {
         DrupalSitemapParser parser = new DrupalSitemapParser(sitemapInputstream, mavenLog);
         final List<SitemapEntry> sitemapEntries = parser.getAllLocationsOfType("quickstarts");
-        assertFalse(sitemapEntries.isEmpty());
-        assertFalse(sitemapEntries.containsAll(Arrays.asList("/projects", "/ticket-monster", "/video/youtube/YeD7upQJoFc")));
+        assertThat(sitemapEntries.isEmpty()).isFalse();
+        assertThat(sitemapEntries.containsAll(Arrays.asList("/projects", "/ticket-monster", "/video/youtube/YeD7upQJoFc"))).isFalse();
         verifyZeroInteractions(mavenLog);
     }
 
@@ -63,7 +62,7 @@ public class DrupalSitemapParserTest {
     public void testErrorParsingSitemap() {
         DrupalSitemapParser parser = new DrupalSitemapParser(null, mavenLog);
         final List<SitemapEntry> sitemapEntries = parser.getAllLocationsOfType("quickstarts");
-        assertTrue(sitemapEntries.isEmpty());
+        assertThat(sitemapEntries.isEmpty()).isTrue();
         verify(mavenLog, atMost(1)).error(isA(XMLStreamException.class));
     }
 

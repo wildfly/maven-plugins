@@ -7,8 +7,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Jason Porter <jporter@redhat.com>
@@ -24,7 +23,7 @@ public class TagDeserializerTest {
 
         Tag manualTag = new Tag("89760308-a111-4528-88ac-0358289a93f6", "29", "en", ".NET");
 
-        assertEquals(deserializedTag, manualTag);
+        assertThat(manualTag).isEqualTo(deserializedTag);
     }
 
     @Test
@@ -36,7 +35,7 @@ public class TagDeserializerTest {
         List<Tag> tags = mapper.readValue(json, new TypeReference<List<Tag>>() {
         });
 
-        assertTrue(tags.contains(manualTag));
-        assertTrue(tags.stream().filter(tag -> tag.getName().equals(manualTag.getName())).count() == 1);
+        assertThat(tags.contains(manualTag)).isTrue();
+        assertThat(tags.stream().filter(tag -> tag.getName().equals(manualTag.getName())).count() == 1).isTrue();
     }
 }

@@ -8,9 +8,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dk.nykredit.jackson.dataformat.hal.HALMapper;
 import org.junit.Test;
 
-import static org.junit.Assert.assertFalse;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * Basic test to assert I am creating the json properly to send to Drupal.
@@ -43,43 +43,43 @@ public class HalJsonBuildingTest {
             JsonNode rootNode = halMapper.readTree(json);
 
             // Check the main structure for completeness
-            assertFalse("property '_links' is missing", rootNode.path("_links").isMissingNode());
-            assertTrue(rootNode.path("_links").size() == 3);
-            assertTrue(rootNode.path("_links").hasNonNull("type"));
+            assertThat(rootNode.path("_links").isMissingNode()).as("property '_links' is missing").isFalse();
+            assertThat(rootNode.path("_links").size() == 3).isTrue();
+            assertThat(rootNode.path("_links").hasNonNull("type")).isTrue();
 
-            assertFalse("property '_embedded' is missing", rootNode.path("_embedded").isMissingNode());
-            assertTrue("'_embedded size is not 2", rootNode.path("_embedded").size() == 2);
+            assertThat(rootNode.path("_embedded").isMissingNode()).as("property '_embedded' is missing").isFalse();
+            assertThat(rootNode.path("_embedded").size() == 2).as("'_embedded size is not 2").isTrue();
             assertTrue("'_embedded[].http://127.0.0.1:8888/rest/relation/node/coding_resource/field_tags size is not 2",
                     rootNode.path("_embedded").findPath("http://127.0.0.1:8888/rest/relation/node/coding_resource/field_tags").size() == 2);
 
-            assertFalse("property 'path' is missing", rootNode.path("path").isMissingNode());
-            assertTrue("property 'path' is not an array", rootNode.path("path").isArray());
-            assertFalse("property 'path[].alias' is missing", rootNode.path("path").findPath("alias").isMissingNode());
+            assertThat(rootNode.path("path").isMissingNode()).as("property 'path' is missing").isFalse();
+            assertThat(rootNode.path("path").isArray()).as("property 'path' is not an array").isTrue();
+            assertThat(rootNode.path("path").findPath("alias").isMissingNode()).as("property 'path[].alias' is missing").isFalse();
 
-            assertFalse("property 'title' is missing", rootNode.path("title").isMissingNode());
-            assertTrue("property 'title' is not an array", rootNode.path("title").isArray());
-            assertFalse("property 'title[].value' is missing", rootNode.path("title").findPath("value").isMissingNode());
+            assertThat(rootNode.path("title").isMissingNode()).as("property 'title' is missing").isFalse();
+            assertThat(rootNode.path("title").isArray()).as("property 'title' is not an array").isTrue();
+            assertThat(rootNode.path("title").findPath("value").isMissingNode()).as("property 'title[].value' is missing").isFalse();
 
-            assertFalse("property 'body' is missing", rootNode.path("body").isMissingNode());
-            assertTrue("property 'body' is not an array", rootNode.path("body").isArray());
-            assertFalse("property 'body[].value' is missing", rootNode.path("body").findPath("value").isMissingNode());
-            assertFalse("property 'body[].format' is missing", rootNode.path("body").findPath("format").isMissingNode());
-            assertFalse("property 'body[].summary' is missing", rootNode.path("body").findPath("summary").isMissingNode());
+            assertThat(rootNode.path("body").isMissingNode()).as("property 'body' is missing").isFalse();
+            assertThat(rootNode.path("body").isArray()).as("property 'body' is not an array").isTrue();
+            assertThat(rootNode.path("body").findPath("value").isMissingNode()).as("property 'body[].value' is missing").isFalse();
+            assertThat(rootNode.path("body").findPath("format").isMissingNode()).as("property 'body[].format' is missing").isFalse();
+            assertThat(rootNode.path("body").findPath("summary").isMissingNode()).as("property 'body[].summary' is missing").isFalse();
 
             Stream.of("field_description", "field_author", "field_contributors", "field_level", "field_published_date",
                     "field_resource_type", "field_technologies", "field_version").forEach(s -> {
-                assertFalse(String.format("property '%s' is missing", s), rootNode.path(s).isMissingNode());
-                assertTrue(String.format("property '%s' is not an array", s), rootNode.path(s).isArray());
-                assertFalse(String.format("property '%s[].value' is missing", s), rootNode.path(s).findPath("value").isMissingNode());
+                assertThat(rootNode.path(s).isMissingNode()).as("property " + s + " is missing").isFalse();
+                assertThat(rootNode.path(s).isArray()).as("property " + s + " is not an array").isTrue();
+                assertThat(rootNode.path(s).findPath("value").isMissingNode()).as("property " + s + "[].value' is missing").isFalse();
             });
 
-            assertFalse("property 'field_source_link' is missing", rootNode.path("field_source_link").isMissingNode());
-            assertTrue("property 'field_source_link' is not an array", rootNode.path("field_source_link").isArray());
-            assertFalse("property 'field_source_link[].uri' is missing", rootNode.path("field_source_link").findPath("uri").isMissingNode());
-            assertFalse("property 'field_source_link[].title' is missing", rootNode.path("field_source_link").findPath("title").isMissingNode());
+            assertThat(rootNode.path("field_source_link").isMissingNode()).as("property 'field_source_link' is missing").isFalse();
+            assertThat(rootNode.path("field_source_link").isArray()).as("property 'field_source_link' is not an array").isTrue();
+            assertThat(rootNode.path("field_source_link").findPath("uri").isMissingNode()).as("property 'field_source_link[].uri' is missing").isFalse();
+            assertThat(rootNode.path("field_source_link").findPath("title").isMissingNode()).as("property 'field_source_link[].title' is missing").isFalse();
         } catch (IOException e) {
             System.out.println(e.getMessage());
-            fail();
+            fail("caught unexpected exception");
         }
     }
 }

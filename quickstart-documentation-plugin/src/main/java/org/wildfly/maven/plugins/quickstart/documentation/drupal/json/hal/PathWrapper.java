@@ -29,4 +29,9 @@ public class PathWrapper {
     public int hashCode() {
         return Objects.hash(getAlias());
     }
+
+    @Override
+    public String toString() {
+        return this.alias;
+    }
 }

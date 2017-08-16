@@ -8,8 +8,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Jason Porter <jporter@redhat.com>
@@ -18,14 +17,14 @@ import static org.junit.Assert.assertTrue;
 public class ProductDeserializerTest {
     @Test
     public void assertDeserializationWorks() throws IOException {
-        String taxonomyTagJson = "{\"title\":\"Red Hat JBoss Enterprise Application Platform\",\"field_product_machine_name\":\"eap\",\"field_product_short_name\":\"JBoss EAP\",\"field_product_technology_group\":\"Accelerated Development And Management\",\"field_url_product_name\":\"eap\",\"uuid\":\"48a3f108-d582-4507-b168-89619ac708f7\",\"nid\":\"33895\"}";
+        String json = "{\"title\":\"Red Hat JBoss Enterprise Application Platform\",\"field_product_machine_name\":\"eap\",\"field_product_short_name\":\"JBoss EAP\",\"field_product_technology_group\":\"Accelerated Development And Management\",\"field_url_product_name\":\"eap\",\"uuid\":\"48a3f108-d582-4507-b168-89619ac708f7\",\"nid\":\"33895\"}";
 
         ObjectMapper mapper = new ObjectMapper();
-        Product deserializedProduct = mapper.readValue(taxonomyTagJson, Product.class);
+        Product deserializedProduct = mapper.readValue(json, Product.class);
 
         Product manualProduct = new Product("33895", "48a3f108-d582-4507-b168-89619ac708f7", "eapn", "JBoss EAP");
 
-        assertEquals(deserializedProduct, manualProduct);
+        assertThat(manualProduct).isEqualTo(deserializedProduct);
     }
 
     @Test
@@ -37,7 +36,7 @@ public class ProductDeserializerTest {
         List<Product> products = mapper.readValue(json, new TypeReference<List<Product>>() {
         });
 
-        assertTrue(products.contains(manualProduct));
-        assertTrue(products.stream().filter(product -> Objects.equals(product, manualProduct)).count() == 1);
+        assertThat(products.contains(manualProduct)).isTrue();
+        assertThat(products.stream().filter(product -> Objects.equals(product, manualProduct)).count() == 1).isTrue();
     }
 }

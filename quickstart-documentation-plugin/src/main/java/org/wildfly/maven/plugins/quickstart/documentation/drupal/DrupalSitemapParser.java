@@ -36,7 +36,7 @@ public class DrupalSitemapParser {
             while (reader.hasNext()) {
                 XMLEvent event = reader.nextEvent();
                 if (event.isStartElement() && event.asStartElement().getName().getLocalPart().equals("loc")) {
-                    String location = reader.nextEvent().asCharacters().getData();
+                    String location = reader.nextEvent().asCharacters().getData().trim();
                     if (location.contains("/" + type)) {
                         // Get the lastmod (hopefully)
                         // basically until the event is a start element for lastmod
