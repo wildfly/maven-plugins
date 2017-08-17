@@ -9,14 +9,11 @@ import java.util.List;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dk.nykredit.jackson.dataformat.hal.HALMapper;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpVersion;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.fluent.Executor;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
-import org.apache.http.message.BasicHttpResponse;
 import org.apache.maven.plugin.logging.Log;
 import org.wildfly.maven.plugins.quickstart.documentation.drupal.json.hal.CodingResource;
 import org.wildfly.maven.plugins.quickstart.documentation.drupal.json.hal.Product;
@@ -27,11 +24,11 @@ import org.wildfly.maven.plugins.quickstart.documentation.drupal.json.hal.Tag;
  *         Copyright 2017 Red Hat, Inc. and/or its affiliates.
  */
 public class DrupalCommunication {
-    private String csrfToken;
+    private volatile String csrfToken;
     private Executor executor;
-    private List<Product> products;
-    private List<Tag> tags;
-    private List<SitemapEntry> sitemapEntries;
+    private volatile List<Product> products;
+    private volatile List<Tag> tags;
+    private volatile List<SitemapEntry> sitemapEntries;
     private Log log;
     private String drupalLocation;
 
@@ -64,6 +61,7 @@ public class DrupalCommunication {
             final Request sitemapRequest = Request.Get(this.drupalLocation + "/drupal/products")
                     .addHeader("X-CSRF-Token", this.csrfToken);
             final String jsonProducts = executor.execute(sitemapRequest).returnContent().asString(Charset.forName("UTF-8"));
+
             final ObjectMapper mapper = new ObjectMapper();
             this.products = mapper.readValue(jsonProducts, new TypeReference<List<Product>>() {
             });
@@ -93,7 +91,7 @@ public class DrupalCommunication {
         return this.tags;
     }
 
-    public HttpResponse postNewCodingResource(CodingResource resource) {
+    public boolean postNewCodingResource(CodingResource resource) {
         ObjectMapper halMapper = new HALMapper();
         try {
             String json = halMapper.writeValueAsString(resource);
@@ -104,15 +102,15 @@ public class DrupalCommunication {
                     .addHeader("accept", "*/*")
                     .bodyString(json, ContentType.create("application/hal+json"));
 
-            return executor.execute(postQuickstart).returnResponse();
+            return executor.execute(postQuickstart).handleResponse(response -> response.getStatusLine().getStatusCode() == 201);
         } catch (IOException e) {
             this.log.error("Error POSTing new coding resource to Drupal", e);
         }
 
-        return new BasicHttpResponse(HttpVersion.HTTP_1_1, 500, "IOException occurred, see logs.");
+        return false;
     }
 
-    public HttpResponse updateCodingResource(CodingResource resource) {
+    public boolean updateCodingResource(CodingResource resource) {
         ObjectMapper halMapper = new HALMapper();
         try {
             String json = halMapper.writeValueAsString(resource);
@@ -123,12 +121,12 @@ public class DrupalCommunication {
                     .addHeader("accept", "*/*")
                     .bodyString(json, ContentType.create("application/hal+json"));
 
-            return executor.execute(postQuickstart).returnResponse();
+            return executor.execute(postQuickstart).handleResponse(response -> response.getStatusLine().getStatusCode() == 200);
         } catch (IOException e) {
             this.log.error("Error POSTing new coding resource to Drupal", e);
         }
 
-        return new BasicHttpResponse(HttpVersion.HTTP_1_1, 500, "IOException occurred, see logs.");
+        return false;
     }
 
     public List<SitemapEntry> getEntriesOfType(String type) {

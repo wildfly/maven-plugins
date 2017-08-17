@@ -23,7 +23,7 @@ public class MetaDataParserTest {
         assertThat(metaData.getTargetProduct().equals("JBoss EAP")).isTrue();
         assertThat(metaData.getTechnologiesAsString().equals("CDI")).isTrue();
         assertThat(metaData.getSummary().equals("The `cdi-veto` quickstart is a simple CDI Portable Extension that uses SPI classes to show how to remove beans and inject JPA entities into an application.")).isTrue();
-        assertThat(metaData.getPrerequisites() == null).isTrue();
+        assertThat(metaData.getPrerequisites()).isNullOrEmpty();
         assertThat(metaData.getSource().equals("https://github.com/jbossas/eap-quickstarts/")).isTrue();
     }
 }

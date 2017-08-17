@@ -14,7 +14,6 @@ import com.github.tomakehurst.wiremock.matching.EqualToJsonPattern;
 import com.github.tomakehurst.wiremock.matching.EqualToPattern;
 import com.github.tomakehurst.wiremock.matching.UrlPattern;
 import dk.nykredit.jackson.dataformat.hal.HALMapper;
-import org.apache.http.HttpResponse;
 import org.apache.maven.plugin.logging.Log;
 import org.junit.Before;
 import org.junit.Rule;
@@ -115,9 +114,7 @@ public class DrupalCommunicationTest {
                 .willReturn(aResponse().withStatus(201))
         );
 
-        HttpResponse response = this.cut.postNewCodingResource(newResource);
-
-        assertThat(response.getStatusLine().getStatusCode()).isEqualTo(201);
+        assertThat(this.cut.postNewCodingResource(newResource)).isTrue();
     }
 
     @Test
@@ -135,9 +132,7 @@ public class DrupalCommunicationTest {
                 .willReturn(aResponse().withStatus(200))
         );
 
-        HttpResponse response = this.cut.updateCodingResource(newResource);
-
-        assertThat(response.getStatusLine().getStatusCode()).isEqualTo(200);
+        assertThat(this.cut.updateCodingResource(newResource)).isTrue();
     }
 
     private CodingResource getCodingResource() {
