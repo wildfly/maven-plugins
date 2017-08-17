@@ -52,7 +52,7 @@ public class DrupalCommunication {
         this.sitemapEntries = new ArrayList<>();
     }
 
-    public List<Product> getProducts() {
+    public synchronized List<Product> getProducts() {
         if (!this.products.isEmpty()) {
             return this.products;
         }
@@ -72,7 +72,7 @@ public class DrupalCommunication {
         return this.products;
     }
 
-    public List<Tag> getTags() {
+    public synchronized List<Tag> getTags() {
         if (!this.tags.isEmpty()) {
             return this.tags;
         }
@@ -129,7 +129,7 @@ public class DrupalCommunication {
         return false;
     }
 
-    public List<SitemapEntry> getEntriesOfType(String type) {
+    public synchronized List<SitemapEntry> getEntriesOfType(String type) {
         if (!this.sitemapEntries.isEmpty()) {
             return this.sitemapEntries;
         }
