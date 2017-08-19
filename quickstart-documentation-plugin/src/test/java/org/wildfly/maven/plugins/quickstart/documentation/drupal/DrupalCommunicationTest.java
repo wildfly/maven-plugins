@@ -9,13 +9,13 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 import com.github.tomakehurst.wiremock.matching.EqualToJsonPattern;
 import com.github.tomakehurst.wiremock.matching.EqualToPattern;
 import com.github.tomakehurst.wiremock.matching.UrlPattern;
 import dk.nykredit.jackson.dataformat.hal.HALMapper;
 import org.apache.maven.plugin.logging.Log;
-import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -45,19 +45,23 @@ import static org.mockito.Mockito.verify;
  *         Copyright 2017 Red Hat, Inc. and/or its affiliates.
  */
 public class DrupalCommunicationTest {
+    @ClassRule
+    public static WireMockClassRule wireMockRule = new WireMockClassRule(8091);
+
+    @Rule
+    public WireMockClassRule instanceRule = wireMockRule;
+
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
-    @Rule
-    public WireMockRule wireMockRule = new WireMockRule(8089);
+
     @Mock
     private Log mavenLog;
 
     private String drupalUsername = "drupal";
     private String drupalPassword = "drupal";
-    private String drupalLocation = "http://localhost:8089";
+    private String drupalLocation = "http://localhost:8091";
     private DrupalCommunication cut;
 
-    @Before
     public void setupClassUnderTest() {
         this.basicWiremockSetup();
         this.cut = new DrupalCommunication(this.drupalUsername, this.drupalPassword, this.drupalLocation, this.mavenLog);
@@ -66,8 +70,9 @@ public class DrupalCommunicationTest {
     @Test
     public void assertIncorrectAuthFails() {
         wireMockRule.resetAll();
+        givenThat(post(urlEqualTo("/user/login"))
+                .willReturn(unauthorized()));
         givenThat(get(urlEqualTo("/session/token"))
-                .withBasicAuth("blah", "blah")
                 .willReturn(unauthorized()));
 
         assertThatExceptionOfType(SecurityException.class)
@@ -77,6 +82,7 @@ public class DrupalCommunicationTest {
 
     @Test
     public void getProducts() throws Exception {
+        setupClassUnderTest();
         givenThat(get(urlPathEqualTo("/drupal/products"))
                 .withHeader("X-CSRF-Token", new EqualToPattern("mytoken"))
                 .willReturn(aResponse().withStatus(200).withBody(this.requestBodyFor("products.json"))));
@@ -89,6 +95,7 @@ public class DrupalCommunicationTest {
 
     @Test
     public void getTags() throws Exception {
+        setupClassUnderTest();
         givenThat(get(urlPathEqualTo("/drupal/taxonomy/tags"))
                 .withHeader("X-CSRF-Token", new EqualToPattern("mytoken"))
                 .willReturn(aResponse().withStatus(200).withBody(this.requestBodyFor("tags.json"))));
@@ -101,6 +108,7 @@ public class DrupalCommunicationTest {
 
     @Test
     public void postNewCodingResource() throws Exception {
+        setupClassUnderTest();
         CodingResource newResource = getCodingResource();
 
         ObjectMapper halMapper = new HALMapper();
@@ -119,11 +127,12 @@ public class DrupalCommunicationTest {
 
     @Test
     public void updateCodingResource() throws Exception {
+        setupClassUnderTest();
         CodingResource newResource = getCodingResource();
 
         ObjectMapper halMapper = new HALMapper();
         String json = halMapper.writeValueAsString(newResource);
-        json = json.replaceAll("%drupalLocation%", this.drupalLocation); // Set the drupal location
+        json = json.replaceAll("%drupalLocation%", "http://localhost:8091"); // Set the drupal location
 
         givenThat(patch(new UrlPattern(new EqualToPattern(newResource.getPath().get(0) + "?_format=hal_json"), false))
                 .withHeader("X-CSRF-Token", new EqualToPattern("mytoken"))
@@ -136,6 +145,7 @@ public class DrupalCommunicationTest {
     }
 
     private CodingResource getCodingResource() {
+        setupClassUnderTest();
         CodingResource newResource = new CodingResource("/quickstarts/new-resource", "Hello World", "Check");
         newResource.addTag("12", UUID.randomUUID().toString());
         newResource.addTag("13", UUID.randomUUID().toString());
@@ -156,6 +166,7 @@ public class DrupalCommunicationTest {
 
     @Test
     public void getEntriesOfType() throws Exception {
+        setupClassUnderTest();
         givenThat(get(urlPathEqualTo("/sitemap.xml"))
                 .willReturn(aResponse().withStatus(200).withBody(this.requestBodyFor("sitemap.xml"))));
 
@@ -165,9 +176,14 @@ public class DrupalCommunicationTest {
     }
 
     private void basicWiremockSetup() {
+        givenThat(post(urlEqualTo("/user/login"))
+                .willReturn(ok()
+                        .withHeader("set-cookie", "SESSION=cookie")));
+
         givenThat(get(urlPathEqualTo("/session/token"))
-                .withBasicAuth(this.drupalUsername, this.drupalPassword)
+                .withCookie("SESSION", new EqualToPattern("cookie"))
                 .willReturn(ok("mytoken")));
+        System.out.println(wireMockRule.isRunning());
     }
 
     private String requestBodyFor(String resourceRequest) {

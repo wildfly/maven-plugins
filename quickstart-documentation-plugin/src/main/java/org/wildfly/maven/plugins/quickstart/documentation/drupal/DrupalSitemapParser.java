@@ -17,16 +17,16 @@ import org.apache.maven.plugin.logging.Log;
  * @author Jason Porter <jporter@redhat.com>
  *         Copyright 2017 Red Hat, Inc. and/or its affiliates.
  */
-public class DrupalSitemapParser {
+class DrupalSitemapParser {
     private final InputStream sitemapInputStream;
     private final Log log;
 
-    public DrupalSitemapParser(InputStream sitemapInputStream, Log log) {
+    DrupalSitemapParser(InputStream sitemapInputStream, Log log) {
         this.sitemapInputStream = sitemapInputStream;
         this.log = log;
     }
 
-    public List<SitemapEntry> getAllLocationsOfType(final String type) {
+    List<SitemapEntry> getAllLocationsOfType(final String type) {
         final ArrayList<SitemapEntry> sitemapEntries = new ArrayList<>();
         try {
             XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();

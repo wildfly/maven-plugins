@@ -15,7 +15,7 @@ import java.util.Objects;
  * @author Jason Porter <jporter@redhat.com>
  *         Copyright 2017 Red Hat, Inc. and/or its affiliates.
  */
-class MetaData {
+public class MetaData {
     private final String name;
     private String author;
     private String level;
@@ -45,7 +45,7 @@ class MetaData {
         return metaData;
     }
 
-    MetaData(String name) {
+    private MetaData(String name) {
         this.name = name;
     }
 

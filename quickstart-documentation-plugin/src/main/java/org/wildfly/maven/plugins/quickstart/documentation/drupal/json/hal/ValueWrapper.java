@@ -9,19 +9,19 @@ import java.util.Objects;
  *         Copyright 2017 Red Hat, Inc. and/or its affiliates.
  */
 public class ValueWrapper {
-    private final Object value;
+    private final String value;
 
-    public ValueWrapper(Object value) {
+    public ValueWrapper(String value) {
         this.value = value;
     }
 
-    public Object getValue() {
+    public String getValue() {
         return value;
     }
 
     @Override
     public String toString() {
-        return value.toString();
+        return value;
     }
 
     @Override

@@ -1,10 +1,12 @@
 package org.wildfly.maven.plugins.quickstart.documentation.drupal.json.hal;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import dk.nykredit.jackson.dataformat.hal.HALLink;
 import dk.nykredit.jackson.dataformat.hal.annotation.EmbeddedResource;
@@ -109,6 +111,14 @@ public class CodingResource {
         return new ArrayList<>(this.path);
     }
 
+    @JsonIgnore
+    public String getPathValue() {
+        if (this.path.isEmpty()) {
+            return "";
+        }
+        return this.path.get(0).getAlias();
+    }
+
     public void addPath(String path) {
         this.path.add(new PathWrapper(path));
     }
@@ -117,12 +127,28 @@ public class CodingResource {
         return new ArrayList<>(this.title);
     }
 
+    @JsonIgnore
+    public String getTitleValue() {
+        if (this.title.isEmpty()) {
+            return "";
+        }
+        return this.title.get(0).getValue();
+    }
+
     public void addTitle(String title) {
         this.title.add(new ValueWrapper(title));
     }
 
     public List<TextWrapper> getBody() {
         return new ArrayList<>(this.body);
+    }
+
+    @JsonIgnore
+    public String getBodyValue() {
+        if (this.body.isEmpty()) {
+            return "";
+        }
+        return this.body.get(0).getValue();
     }
 
     public void addBody(String body) {
@@ -165,12 +191,28 @@ public class CodingResource {
         return new ArrayList<>(this.description);
     }
 
+    @JsonIgnore
+    public String getDescriptionValue() {
+        if (this.description.isEmpty()) {
+            return "";
+        }
+        return this.description.get(0).getValue();
+    }
+
     public void addAuthor(String value) {
         this.author.add(new ValueWrapper(value));
     }
 
     public List<ValueWrapper> getAuthor() {
         return new ArrayList<>(this.author);
+    }
+
+    @JsonIgnore
+    public String getAuthorValue() {
+        if (this.author.isEmpty()) {
+            return "";
+        }
+        return this.author.get(0).getValue();
     }
 
     public void addContibutor(String value) {
@@ -181,6 +223,13 @@ public class CodingResource {
         return new ArrayList<>(this.contributors);
     }
 
+    @JsonIgnore
+    public String getContributorValue() {
+        if (this.contributors.isEmpty()) {
+            return "";
+        }
+        return this.contributors.get(0).getValue();
+    }
 
     public void addLevel(String value) {
         this.level.add(new ValueWrapper(value));
@@ -188,6 +237,14 @@ public class CodingResource {
 
     public List<ValueWrapper> getLevel() {
         return new ArrayList<>(level);
+    }
+
+    @JsonIgnore
+    public String getLevelValue() {
+        if (this.level.isEmpty()) {
+            return "";
+        }
+        return this.level.get(0).getValue();
     }
 
     public void addPublishDate(String value) {
@@ -198,12 +255,28 @@ public class CodingResource {
         return new ArrayList<>(publishDate);
     }
 
+    @JsonIgnore
+    public String getPublishDateValue() {
+        if (this.publishDate.isEmpty()) {
+            return "";
+        }
+        return this.publishDate.get(0).getValue();
+    }
+
     public void addResourceType(String value) {
         this.resourceType.add(new ValueWrapper(value));
     }
 
     public List<ValueWrapper> getResourceType() {
         return new ArrayList<>(resourceType);
+    }
+
+    @JsonIgnore
+    public String getResourceTypeValue() {
+        if (this.resourceType.isEmpty()) {
+            return "";
+        }
+        return this.resourceType.get(0).getValue();
     }
 
     public void addVersion(String value) {
@@ -214,12 +287,33 @@ public class CodingResource {
         return new ArrayList<>(version);
     }
 
+    @JsonIgnore
+    public String getVersionValue() {
+        if (this.version.isEmpty()) {
+            return "";
+        }
+        return this.version.get(0).getValue();
+    }
+
     public void addTechnologies(String value) {
-        this.technologies.add(new ValueWrapper(value));
+        if (this.technologies.size() > 0) {
+            final String joined = String.join(", ", Arrays.asList(this.technologies.get(0).getValue(), value));
+            this.technologies.set(0, new ValueWrapper(joined));
+        } else {
+            this.technologies.add(new ValueWrapper(value));
+        }
     }
 
     public List<ValueWrapper> getTechnologies() {
         return new ArrayList<>(technologies);
+    }
+
+    @JsonIgnore
+    public String getTechnologiesValue() {
+        if (this.technologies.isEmpty()) {
+            return "";
+        }
+        return this.technologies.get(0).getValue();
     }
 
     public void addSourceLink(String url, String title) {
@@ -228,5 +322,13 @@ public class CodingResource {
 
     public List<LinkWrapper> getSourceLink() {
         return new ArrayList<>(sourceLink);
+    }
+
+    @JsonIgnore
+    public String getSourceValue() {
+        if (this.sourceLink.isEmpty()) {
+            return "";
+        }
+        return this.sourceLink.get(0).getUri();
     }
 }

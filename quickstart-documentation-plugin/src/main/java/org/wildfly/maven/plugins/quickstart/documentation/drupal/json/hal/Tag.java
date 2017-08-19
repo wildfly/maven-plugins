@@ -49,7 +49,7 @@ public class Tag {
         return new ArrayList<>(uuid);
     }
 
-    public void addUuid(ValueWrapper uuid) {
+    public void addUuid(String uuid) {
         this.uuid.add(new ValueWrapper(uuid));
     }
 
