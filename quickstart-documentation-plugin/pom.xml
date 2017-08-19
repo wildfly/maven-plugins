@@ -34,7 +34,14 @@
         <version.org.apache.maven.maven-core>3.3.1</version.org.apache.maven.maven-core><version.org.apache.maven.plugin-testing.maven-plugin-testing-harness>3.3.0
         </version.org.apache.maven.plugin-testing.maven-plugin-testing-harness>
         <version.org.apache.maven.plugin-tools>3.5</version.org.apache.maven.plugin-tools>
-        
+        <version.junit>4.12</version.junit>
+        <version.dk.nykredit.jackson.dataformat>1.0.1</version.dk.nykredit.jackson.dataformat>
+        <version.org.apache.httpcomponents>4.5.3</version.org.apache.httpcomponents>
+        <version.org.mockito>2.8.47</version.org.mockito>
+        <version.org.jsoup>1.10.3</version.org.jsoup>
+        <version.com.github.tomakehurst.wiremock>2.7.1</version.com.github.tomakehurst.wiremock>
+        <version.org.slf4j.slf4j-simple>1.8.0-alpha2</version.org.slf4j.slf4j-simple>
+        <version.org.assertj.assertj-core>3.8.0</version.org.assertj.assertj-core>
     </properties>
     <licenses>
         <license>
@@ -134,7 +141,56 @@
             <artifactId>maven-plugin-annotations</artifactId>
             <version>${version.org.apache.maven.plugin-tools}</version>
         </dependency>
-
+        <dependency>
+            <groupId>dk.nykredit.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-hal</artifactId>
+            <version>${version.dk.nykredit.jackson.dataformat}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${version.org.apache.httpcomponents}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>fluent-hc</artifactId>
+            <version>${version.org.apache.httpcomponents}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>${version.org.jsoup}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${version.junit}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${version.org.mockito}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.tomakehurst</groupId>
+            <artifactId>wiremock</artifactId>
+            <version>${version.com.github.tomakehurst.wiremock}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${version.org.slf4j.slf4j-simple}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${version.org.assertj.assertj-core}</version>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
 
