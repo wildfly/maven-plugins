@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class MetaDataParserTest {
     @Test
     public void assertFullMetaDataParse() throws Exception {
-        Path readmeLocation = Paths.get(this.getClass().getClassLoader().getResource("cdi-veto").getPath());
+        Path readmeLocation = Paths.get(this.getClass().getClassLoader().getResource("cdi-veto").toURI());
         final MetaData metaData = MetaData.parseReadme(readmeLocation);
 
         assertThat(metaData.getName().equals("cdi-veto")).isTrue();

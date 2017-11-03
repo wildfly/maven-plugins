@@ -53,7 +53,7 @@ public class CodingResourceGeneratorTest {
                 drupalLocation, this.mavenLog);
         CodingResourceGenerator cut = new CodingResourceGenerator(drupalCommunication, mavenLog);
 
-        Path markdown = Paths.get(this.getClass().getClassLoader().getResource("cdi-veto").getPath());
+        Path markdown = Paths.get(this.getClass().getClassLoader().getResource("cdi-veto").toURI());
         CodingResource result = cut.createResource(markdown, "quickstart");
 
         assertThat(result).isNotNull();
