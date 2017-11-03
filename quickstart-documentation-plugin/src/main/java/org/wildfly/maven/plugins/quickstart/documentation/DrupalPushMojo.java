@@ -76,13 +76,17 @@ public class DrupalPushMojo extends AbstractMojo {
                         final SitemapEntry testEntry = new SitemapEntry(resource.getPathValue());
                         if (entries.contains(testEntry)) {
                             final SitemapEntry entry = entries.get(entries.indexOf(testEntry));
-                            if (entry.getLastmod().isAfter(Instant.ofEpochMilli(path.toFile().lastModified()))) {
+                            //getLog().info("path.toFile().lastModifed() "+Instant.ofEpochMilli(path.toFile().lastModified()));
+                            //getLog().info("entry.getLastmod()          "+entry.getLastmod());
+                            if (entry.getLastmod().isBefore(Instant.ofEpochMilli(path.toFile().lastModified()))) {
                                 final boolean success = drupalCommunication.updateCodingResource(resource);
                                 if (success) {
                                     getLog().debug("Successful update to " + resource.getPathValue());
                                 } else {
                                     getLog().info("Was not able to update " + resource.getPathValue() + ". Consult log.");
                                 }
+                            }else{
+                                getLog().debug("not modified");
                             }
                         } else {
                             final boolean success = drupalCommunication.postNewCodingResource(resource);

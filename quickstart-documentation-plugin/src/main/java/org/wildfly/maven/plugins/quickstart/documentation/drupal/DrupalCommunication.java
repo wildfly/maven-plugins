@@ -119,6 +119,8 @@ public class DrupalCommunication {
     }
 
     public boolean postNewCodingResource(CodingResource resource) {
+        log.info("adding new resource: "+resource.getPath());
+
         ObjectMapper halMapper = new HALMapper();
         try {
             String json = halMapper.writeValueAsString(resource);
@@ -133,7 +135,15 @@ public class DrupalCommunication {
 
             executor.auth(this.username, this.password);
             executor.authPreemptive(this.drupalLocation);
-            return executor.execute(postQuickstart).handleResponse(response -> response.getStatusLine().getStatusCode() == 201);
+            return executor.execute(postQuickstart).handleResponse(response -> {
+                if (response.getStatusLine().getStatusCode() != 201) {
+                    log.error(String.format("Post failed with response %s - %s",response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
+                    return false;
+                } else {
+                    return true;
+                }
+                //return response.getStatusLine().getStatusCode() == 201;
+            });
         } catch (IOException e) {
             this.log.error("Error POSTing new coding resource to Drupal", e);
         }
@@ -142,6 +152,7 @@ public class DrupalCommunication {
     }
 
     public boolean updateCodingResource(CodingResource resource) {
+        log.info("updating resource: "+resource.getPath());
         ObjectMapper halMapper = new HALMapper();
         try {
             String json = halMapper.writeValueAsString(resource);
@@ -156,7 +167,14 @@ public class DrupalCommunication {
 
             executor.auth(this.username, this.password);
             executor.authPreemptive(this.drupalLocation);
-            return executor.execute(postQuickstart).handleResponse(response -> response.getStatusLine().getStatusCode() == 200);
+            return executor.execute(postQuickstart).handleResponse(response -> {
+                if (response.getStatusLine().getStatusCode() != 200) {
+                    log.error(String.format("Post failed with response %s - %s",response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
+                    return false;
+                } else {
+                    return true;
+                }
+            });
         } catch (IOException e) {
             this.log.error("Error POSTing new coding resource to Drupal", e);
         }
