@@ -126,7 +126,7 @@ public class DrupalCommunication {
 
             this.log.debug("Posting to Drupal using json: " + json);
 
-            Request postQuickstart = Request.Post(String.format("%s/entity/node?_format=hal_json", this.drupalLocation))
+            Request postQuickstart = Request.Post(String.format("%s/node?_format=hal_json", this.drupalLocation))
                     .addHeader("X-CSRF-Token", this.csrfToken)
                     .addHeader("accept", "*/*")
                     .bodyString(json, ContentType.create("application/hal+json"));
