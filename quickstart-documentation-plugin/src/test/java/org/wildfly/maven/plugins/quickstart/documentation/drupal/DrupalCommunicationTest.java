@@ -115,7 +115,7 @@ public class DrupalCommunicationTest {
         String json = halMapper.writeValueAsString(newResource);
         json = json.replaceAll("%drupalLocation%", this.drupalLocation); // Set the drupal location
 
-        givenThat(post("/node?_format=hal_json")
+        givenThat(post("/entity/node?_format=hal_json")
                 .withHeader("X-CSRF-Token", new EqualToPattern("mytoken"))
                 .withBasicAuth(this.drupalUsername, this.drupalPassword)
                 .withRequestBody(new EqualToJsonPattern(json, true, true))

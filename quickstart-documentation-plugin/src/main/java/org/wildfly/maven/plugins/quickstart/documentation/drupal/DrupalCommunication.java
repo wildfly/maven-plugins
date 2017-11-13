@@ -19,6 +19,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.apache.maven.plugin.logging.Log;
 import org.wildfly.maven.plugins.quickstart.documentation.drupal.json.hal.CodingResource;
 import org.wildfly.maven.plugins.quickstart.documentation.drupal.json.hal.Product;
@@ -37,7 +38,7 @@ public class DrupalCommunication {
     private volatile List<Tag> tags;
     private volatile List<SitemapEntry> sitemapEntries;
     private Log log;
-    private String drupalLocation;
+    private final String drupalLocation;
     private String username;
     private String password;
 
@@ -48,7 +49,11 @@ public class DrupalCommunication {
                 .build();
         this.executor = Executor.newInstance(client);
         this.log = log;
+        if (drupalLocation.endsWith("/")){
+            drupalLocation = drupalLocation.substring(0, drupalLocation.length()- 1);
+        }
         this.drupalLocation = drupalLocation;
+
         this.username = username;
         this.password = password;
 
@@ -67,6 +72,7 @@ public class DrupalCommunication {
 
             final Response response = executor.execute(Request.Get(drupalLocation + "/session/token"));
             this.csrfToken = response.returnContent().asString();
+            this.log.debug("csrfToken = " + this.csrfToken);
         } catch (IOException e) {
             this.log.error("Could not obtain a security token from Drupal.", e);
             throw new SecurityException("Could not obtain a token from Drupal. Cannot continue.", e);
@@ -119,6 +125,9 @@ public class DrupalCommunication {
     }
 
     public boolean postNewCodingResource(CodingResource resource) {
+        if (true){
+            return true;
+        }
         log.info("adding new resource: "+resource.getPath());
 
         ObjectMapper halMapper = new HALMapper();
@@ -128,7 +137,7 @@ public class DrupalCommunication {
 
             this.log.debug("Posting to Drupal using json: " + json);
 
-            Request postQuickstart = Request.Post(String.format("%s/node?_format=hal_json", this.drupalLocation))
+            Request postQuickstart = Request.Post(String.format("%s/entity/node?_format=hal_json", this.drupalLocation))
                     .addHeader("X-CSRF-Token", this.csrfToken)
                     .addHeader("accept", "*/*")
                     .bodyString(json, ContentType.create("application/hal+json"));
@@ -137,7 +146,7 @@ public class DrupalCommunication {
             executor.authPreemptive(this.drupalLocation);
             return executor.execute(postQuickstart).handleResponse(response -> {
                 if (response.getStatusLine().getStatusCode() != 201) {
-                    log.error(String.format("Post failed with response %s - %s",response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
+                    log.error(String.format("Post new resource failed with response %s - %s",response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
                     return false;
                 } else {
                     return true;
@@ -164,12 +173,15 @@ public class DrupalCommunication {
                     .addHeader("X-CSRF-Token", this.csrfToken)
                     .addHeader("accept", "*/*")
                     .bodyString(json, ContentType.create("application/hal+json"));
+            this.log.debug("postQuickstart = " + postQuickstart);
+
 
             executor.auth(this.username, this.password);
             executor.authPreemptive(this.drupalLocation);
             return executor.execute(postQuickstart).handleResponse(response -> {
                 if (response.getStatusLine().getStatusCode() != 200) {
-                    log.error(String.format("Post failed with response %s - %s",response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
+                    log.error(String.format("Update failed with response %s - %s",response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
+                    log.error("error: "+EntityUtils.toString(response.getEntity()));
                     return false;
                 } else {
                     return true;
