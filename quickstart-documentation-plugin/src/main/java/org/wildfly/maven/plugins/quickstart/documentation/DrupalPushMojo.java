@@ -81,9 +81,9 @@ public class DrupalPushMojo extends AbstractMojo {
                             if (entry.getLastmod().isBefore(Instant.ofEpochMilli(path.toFile().lastModified()))) {
                                 final boolean success = drupalCommunication.updateCodingResource(resource);
                                 if (success) {
-                                    getLog().debug("Successful update to " + resource.getPathValue());
+                                    getLog().info("Successful update to " + resource.getPathValue());
                                 } else {
-                                    getLog().info("Was not able to update " + resource.getPathValue() + ". Consult log.");
+                                    getLog().warn("Was not able to update " + resource.getPathValue() + ". Consult log.");
                                 }
                             }else{
                                 getLog().debug("not modified");
@@ -91,9 +91,9 @@ public class DrupalPushMojo extends AbstractMojo {
                         } else {
                             final boolean success = drupalCommunication.postNewCodingResource(resource);
                             if (success) {
-                                getLog().debug("Successful creation of " + resource.getPathValue());
+                                getLog().info("Successful creation of " + resource.getPathValue());
                             } else {
-                                getLog().info("Was not able to create " + resource.getPathValue() + ". Consult log.");
+                                getLog().warn("Was not able to create " + resource.getPathValue() + ". Consult log.");
                             }
                         }
                     });

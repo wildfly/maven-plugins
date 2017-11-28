@@ -125,9 +125,6 @@ public class DrupalCommunication {
     }
 
     public boolean postNewCodingResource(CodingResource resource) {
-        if (true){
-            return true;
-        }
         log.info("adding new resource: "+resource.getPath());
 
         ObjectMapper halMapper = new HALMapper();
@@ -135,7 +132,7 @@ public class DrupalCommunication {
             String json = halMapper.writeValueAsString(resource);
             json = json.replaceAll("%drupalLocation%", this.drupalLocation);
 
-            this.log.debug("Posting to Drupal using json: " + json);
+            //this.log.debug("Posting to Drupal using json: " + json);
 
             Request postQuickstart = Request.Post(String.format("%s/entity/node?_format=hal_json", this.drupalLocation))
                     .addHeader("X-CSRF-Token", this.csrfToken)
