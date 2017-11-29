@@ -53,13 +53,13 @@ public class CodingResourceGeneratorTest {
                 drupalLocation, this.mavenLog);
         CodingResourceGenerator cut = new CodingResourceGenerator(drupalCommunication, mavenLog);
 
-        Path markdown = Paths.get(this.getClass().getClassLoader().getResource("cdi-veto").toURI());
+        Path markdown = Paths.get(this.getClass().getClassLoader().getResource("helloworld").toURI());
         CodingResource result = cut.createResource(markdown, "quickstart");
 
         assertThat(result).isNotNull();
-        assertThat(result.getPathValue()).isEqualToIgnoringCase("/quickstarts/eap/cdi-veto");
-        assertThat(result.getAuthorValue()).isEqualToIgnoringCase("Jason Porter");
-        assertThat(result.getTechnologiesValue()).isEqualToIgnoringCase("CDI");
+        assertThat(result.getPathValue()).isEqualToIgnoringCase("/quickstarts/eap/helloworld");
+        assertThat(result.getAuthorValue()).isEqualToIgnoringCase("Pete Muir");
+        assertThat(result.getTechnologiesValue()).isEqualToIgnoringCase("CDI, Servlet");
     }
 
     private void basicWiremockSetup() {

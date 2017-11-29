@@ -51,7 +51,7 @@ public class CodingResourceGenerator {
             newResource.addDescription(metaData.getSummary());
             newResource.addResourceType(resourceType);
             newResource.addLevel(metaData.getLevel());
-            Arrays.stream(metaData.getTechnologies()).forEach(newResource::addTechnologies);
+            Arrays.stream(metaData.getTechnologies()).map(String::trim).forEach(newResource::addTechnologies);
             newResource.addSourceLink(metaData.getSource(), "");
 
             targetProduct.ifPresent(newResource::addRelatedProduct);

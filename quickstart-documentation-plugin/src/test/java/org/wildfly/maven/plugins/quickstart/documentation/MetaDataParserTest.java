@@ -3,6 +3,7 @@ package org.wildfly.maven.plugins.quickstart.documentation;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -14,16 +15,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class MetaDataParserTest {
     @Test
     public void assertFullMetaDataParse() throws Exception {
-        Path readmeLocation = Paths.get(this.getClass().getClassLoader().getResource("cdi-veto").toURI());
+        Path readmeLocation = Paths.get(this.getClass().getClassLoader().getResource("helloworld").toURI());
         final MetaData metaData = MetaData.parseReadme(readmeLocation);
 
-        assertThat(metaData.getName().equals("cdi-veto")).isTrue();
-        assertThat(metaData.getAuthor().equals("Jason Porter")).isTrue();
-        assertThat(metaData.getLevel().equals("Intermediate")).isTrue();
-        assertThat(metaData.getTargetProduct().equals("JBoss EAP")).isTrue();
-        assertThat(metaData.getTechnologiesAsString().equals("CDI")).isTrue();
-        assertThat(metaData.getSummary().equals("The `cdi-veto` quickstart is a simple CDI Portable Extension that uses SPI classes to show how to remove beans and inject JPA entities into an application.")).isTrue();
+        assertThat(metaData.getName().equals("helloworld")).isTrue();
+        Assert.assertEquals("Pete Muir", metaData.getAuthor());
+        Assert.assertEquals("Beginner", metaData.getLevel());
+        Assert.assertEquals("JBoss EAP", metaData.getTargetProduct());
+        Assert.assertEquals("CDI, Servlet", metaData.getTechnologiesAsString());
+        Assert.assertEquals("The `helloworld` quickstart demonstrates the use of *CDI* and *Servlet 3* and is a good starting point to verify {productName} is configured correctly.", metaData.getSummary());
+        Assert.assertEquals("https://github.com/jbossas/eap-quickstarts/", metaData.getSource());
         assertThat(metaData.getPrerequisites()).isNullOrEmpty();
-        assertThat(metaData.getSource().equals("https://github.com/jbossas/eap-quickstarts/")).isTrue();
     }
 }

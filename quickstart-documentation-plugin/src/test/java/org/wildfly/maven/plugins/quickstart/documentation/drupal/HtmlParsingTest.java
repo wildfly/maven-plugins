@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class HtmlParsingTest {
     @Test
     public void assertPullingTheRightAmountFromHtml() throws Exception {
-        InputStream file = this.getClass().getClassLoader().getResourceAsStream("cdi-veto/README.html");
+        InputStream file = this.getClass().getClassLoader().getResourceAsStream("helloworld/README.html");
         Document doc = Jsoup.parse(file, "UTF-8", "");
         Elements docContent = doc.select("h1 ~ *:not(p:first-of-type)");
 

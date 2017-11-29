@@ -21,7 +21,7 @@ public class TOCGenerator {
 
     public static void main(String[] args) throws IOException {
         Path root = Paths.get(".").normalize();
-      new TOCGenerator(Arrays.asList("target", "dist", "template", "guide")).generate(root, "[TOC-quickstart]", Paths.get("target/docs/README.md"));
+      new TOCGenerator(Arrays.asList("target", "dist", "template", "guide")).generate(root, "[TOC-quickstart]", Paths.get("target/docs/README.adoc"));
     }
 
     public TOCGenerator(List<String> ignoredDirs) {
@@ -35,14 +35,14 @@ public class TOCGenerator {
             && (!ignoredDirs.contains(entry.getFileName().toString())))
         ) {
             dirs.forEach(path -> {
-                if (Files.exists(path.resolve("README.md"))){
+                if (Files.exists(path.resolve("README.adoc"))){
                     try {
                         allMetaData.add(MetaData.parseReadme(path));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }else{
-                    System.out.println(String.format("Directory %s doesn't contain README.md, skipping", path));
+                    System.out.println(String.format("Directory %s doesn't contain README.adoc, skipping", path));
                 }
             });
         }
@@ -61,19 +61,21 @@ public class TOCGenerator {
 | col 3 is      | right-aligned | $1600 |
          */
         StringBuffer sb = new StringBuffer();
-        sb.append("| *Quickstart Name* | *Demonstrated Technologies* | *Description* | *Experience Level Required* | *Prerequisites* |\n");
-        sb.append("| --- | --- | --- | --- | --- |\n");
+        sb.append("[cols=\"1,1,2,1,1\", options=\"header\"]\n");
+        sb.append("|===\n");
+        sb.append("| Quickstart Name | Demonstrated Technologies | Description | Experience Level Required | Prerequisites \n");
+        //sb.append("| --- | --- | --- | --- | --- \n");
         for (MetaData md : metaDataList) {
             sb.append("| ")
-                    .append("[").append(md.getName()).append("]").append("(").append(md.getName()).append("/README.md) |")
+                    .append("link:").append(md.getName()).append("/README{outfilesuffix}[").append(md.getName()).append("]|")
                     .append(md.getTechnologiesAsString()).append(" | ")
                     .append(md.getSummary()).append(" | ")
                     .append(md.getLevel()).append(" | ")
-                    .append(md.getPrerequisites())
-                    .append(" |")
-                    .append("\n");
+                    .append(md.getPrerequisites() == null ? "_none_" : md.getPrerequisites())
+                .append("\n");
 
         }
+        sb.append("|===");
 
         return sb;
     }

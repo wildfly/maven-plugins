@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author Jason Porter <jporter@redhat.com>
@@ -26,18 +27,27 @@ public class MetaData {
     private String[] technologies;
 
     public static MetaData parseReadme(Path quickstartDir) throws IOException {
-        Path path = quickstartDir.resolve("README.md");
+        Path path = quickstartDir.resolve("README.adoc");
         MetaData metaData = new MetaData(quickstartDir.getFileName().toString());
         try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
             List<String> result = new ArrayList<>();
+            boolean shouldReadAbstract = false;
             for (; ; ) {
                 String line = reader.readLine();
                 if (line == null) {
                     break;
                 }
                 result.add(line);
+                if (shouldReadAbstract){
+                    metaData.summary = line;
+                    shouldReadAbstract = false;
+                }
+                if ("[abstract]".equals(line.trim())){
+                    shouldReadAbstract = true;
+                    continue;
+                }
                 metaData.parseLine(line);
-                if (result.size() > 10) {
+                if (result.size() > 15) {
                     break;
                 }
             }
@@ -50,25 +60,25 @@ public class MetaData {
     }
 
     private void parseLine(String line) {
-        if (line.toLowerCase(Locale.US).startsWith("author")) {
-            author = line.substring(line.indexOf(" ")).trim();
-        } else if (line.toLowerCase(Locale.US).startsWith("technologies")) {
-            technologies = line.substring(line.indexOf(" ")).trim().split(",");
-        } else if (line.toLowerCase(Locale.US).startsWith("level")) {
-            level = line.substring(line.indexOf(" ")).trim();
-        } else if (line.toLowerCase(Locale.US).startsWith("summary")) {
-            summary = line.substring(line.indexOf(" ")).trim();
-        } else if (line.toLowerCase(Locale.US).startsWith("target product")) {
-            targetProduct = line.substring(line.indexOf(" ", 14)).trim();
-        } else if (line.toLowerCase(Locale.US).startsWith("source")) {
-            source = line.substring(line.indexOf(" ")).trim().replaceAll("<", "").replaceAll(">", "");
-        } else if (line.toLowerCase(Locale.US).startsWith("prerequisites")) {
-            prerequisites = line.substring(line.indexOf(" ")).trim();
+        if (line.toLowerCase(Locale.US).startsWith(":author:")) {
+            author = line.substring(line.indexOf(": ")+2).trim();
+        } else if (line.toLowerCase(Locale.US).startsWith(":technologies:")) {
+            technologies = line.substring(line.indexOf(": ")+2).trim().split(",");
+        } else if (line.toLowerCase(Locale.US).startsWith(":level:")) {
+            level = line.substring(line.indexOf(": ")+2).trim();
+        } else if (line.startsWith(":productName:")) {
+            targetProduct = line.substring(line.indexOf(": ")+2).trim();
+        } else if (line.toLowerCase(Locale.US).startsWith(":source:")) {
+            source = line.substring(line.indexOf(": ")+2).trim().replaceAll("<", "").replaceAll(">", "");
+        } else if (line.toLowerCase(Locale.US).startsWith(":prerequisites:")) {
+            prerequisites = line.substring(line.indexOf(": ")+2).trim();
         }
     }
 
     String getTechnologiesAsString() {
-        return String.join(", ", Arrays.asList(technologies));
+        return Arrays.stream(technologies)
+                        .map(String::trim)
+                        .collect(Collectors.joining(", "));
     }
 
     public String getName() {
