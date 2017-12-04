@@ -25,7 +25,7 @@
     </parent>
     <groupId>org.wildfly.maven.plugins</groupId>
     <artifactId>maven-plugins</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>2.0.0.Beta1</version>
     <packaging>pom</packaging>
     <name>WildFly plugins</name>
     <description>Aggregate of all wildfly util plugins</description>
@@ -34,7 +34,7 @@
         <connection>scm:git:https://github.com/wildfly/maven-plugins.git</connection>
         <developerConnection>scm:git:https://github.com/wildfly/maven-plugins.git</developerConnection>
         <url>https://github.com/wildfly/maven-plugins</url>
-      <tag>HEAD</tag>
+      <tag>maven-plugins-2.0.0.Beta1</tag>
   </scm>
 
     <licenses>
