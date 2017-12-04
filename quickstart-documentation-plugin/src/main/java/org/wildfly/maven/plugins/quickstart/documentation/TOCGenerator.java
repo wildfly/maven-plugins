@@ -11,6 +11,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.Pattern;
 
 /**
  * @author Tomaz Cerar (c) 2017 Red Hat Inc.
@@ -21,7 +22,7 @@ public class TOCGenerator {
 
     public static void main(String[] args) throws IOException {
         Path root = Paths.get(".").normalize();
-      new TOCGenerator(Arrays.asList("target", "dist", "template", "guide")).generate(root, "[TOC-quickstart]", Paths.get("target/docs/README.adoc"));
+      new TOCGenerator(Arrays.asList("target", "dist", "template", "guide")).generate(root, "[TOC-quickstart]", Paths.get("README.adoc"));
     }
 
     public TOCGenerator(List<String> ignoredDirs) {
@@ -49,7 +50,7 @@ public class TOCGenerator {
         StringBuffer sb = generateTOC(allMetaData);
         Path tocFile = root.resolve(targetDoc);
         String tocFileContent = new String(Files.readAllBytes(tocFile), StandardCharsets.UTF_8);
-        tocFileContent = tocFileContent.replace(tocMarker, sb.toString());
+        tocFileContent = tocFileContent.replaceAll("<TOC>[\\s\\S]*<\\/TOC>", "<TOC>\n"+sb.toString()+"\n//</TOC>");
         Files.write(tocFile, tocFileContent.getBytes(StandardCharsets.UTF_8));
     }
 
