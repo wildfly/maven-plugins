@@ -36,7 +36,7 @@ public class TOCMojo extends AbstractMojo {
     @Parameter(defaultValue = "[TOC-quickstart]", required = true)
     protected String replaceMarker;
 
-    @Parameter(defaultValue = "target/docs/README.md", required = true)
+    @Parameter(defaultValue = "target/docs/README.adoc", required = true)
     protected String targetDocument;
 
 

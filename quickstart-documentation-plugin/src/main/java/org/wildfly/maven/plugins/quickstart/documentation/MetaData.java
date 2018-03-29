@@ -1,16 +1,22 @@
 package org.wildfly.maven.plugins.quickstart.documentation;
 
+import static org.asciidoctor.Asciidoctor.Factory.create;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import org.asciidoctor.Asciidoctor;
+import org.asciidoctor.Options;
+import org.asciidoctor.SafeMode;
+import org.asciidoctor.ast.DocumentHeader;
+import org.asciidoctor.ast.StructuredDocument;
 
 /**
  * @author Jason Porter <jporter@redhat.com>
@@ -25,31 +31,36 @@ public class MetaData {
     private String source;
     private String prerequisites;
     private String[] technologies;
+    private boolean openshift;
 
     public static MetaData parseReadme(Path quickstartDir) throws IOException {
         Path path = quickstartDir.resolve("README.adoc");
+
+        Asciidoctor asciidoctor = create();
+        Options options = new Options();
+        options.setSafe(SafeMode.UNSAFE);  //to enable includes
+        StructuredDocument doc = asciidoctor.readDocumentStructure(path.toFile(), options.map());
+
+        DocumentHeader header = doc.getHeader();
+
         MetaData metaData = new MetaData(quickstartDir.getFileName().toString());
+        metaData.setAttributes(header.getAttributes());
         try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
-            List<String> result = new ArrayList<>();
             boolean shouldReadAbstract = false;
             for (; ; ) {
                 String line = reader.readLine();
                 if (line == null) {
                     break;
                 }
-                result.add(line);
-                if (shouldReadAbstract){
+                if (shouldReadAbstract) {
                     metaData.summary = line;
-                    shouldReadAbstract = false;
+                    break;
                 }
-                if ("[abstract]".equals(line.trim())){
+                if ("[abstract]".equals(line.trim())) {
                     shouldReadAbstract = true;
                     continue;
                 }
-                metaData.parseLine(line);
-                if (result.size() > 15) {
-                    break;
-                }
+
             }
         }
         return metaData;
@@ -59,21 +70,30 @@ public class MetaData {
         this.name = name;
     }
 
-    private void parseLine(String line) {
-        if (line.toLowerCase(Locale.US).startsWith(":author:")) {
-            author = line.substring(line.indexOf(": ")+2).trim();
-        } else if (line.toLowerCase(Locale.US).startsWith(":technologies:")) {
-            technologies = line.substring(line.indexOf(": ")+2).trim().split(",");
-        } else if (line.toLowerCase(Locale.US).startsWith(":level:")) {
-            level = line.substring(line.indexOf(": ")+2).trim();
-        } else if (line.startsWith(":productName:")) {
-            targetProduct = line.substring(line.indexOf(": ")+2).trim();
-        } else if (line.toLowerCase(Locale.US).startsWith(":source:")) {
-            source = line.substring(line.indexOf(": ")+2).trim().replaceAll("<", "").replaceAll(">", "");
-        } else if (line.toLowerCase(Locale.US).startsWith(":prerequisites:")) {
-            prerequisites = line.substring(line.indexOf(": ")+2).trim();
+    private void setAttributes(Map<String, Object> attributes) {
+
+        if (attributes.containsKey("author")) {
+            author = attributes.get("author").toString();
         }
-    }
+        if (attributes.containsKey("technologies")) {
+            technologies = attributes.get("technologies").toString().split(",");
+        }
+        if (attributes.containsKey("level")) {
+            level = attributes.get("level").toString().trim();
+        }
+        if (attributes.containsKey("productName")) {
+            targetProduct = attributes.get("productName").toString().trim();
+        }
+        if (attributes.containsKey("source")) {
+            source = attributes.get("source").toString().trim().replaceAll("<", "").replaceAll(">", "");
+        }
+        if (attributes.containsKey("prerequisites")) {
+            prerequisites = attributes.get("prerequisites").toString().trim();
+        }
+        if (attributes.containsKey("openshift")) {
+            openshift = Boolean.parseBoolean(attributes.get("openshift").toString());
+        }
+      }
 
     String getTechnologiesAsString() {
         return Arrays.stream(technologies)
@@ -141,6 +161,10 @@ public class MetaData {
         this.technologies = technologies;
     }
 
+    public boolean isOpenshift() {
+        return openshift;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -151,6 +175,7 @@ public class MetaData {
                 ", targetProduct='" + targetProduct + '\'' +
                 ", source='" + source + '\'' +
                 ", prerequisites='" + prerequisites + '\'' +
+                ", openshift='" + openshift + '\'' +
                 ", technologies=" + Arrays.toString(technologies) +
                 '}';
     }

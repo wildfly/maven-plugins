@@ -26,5 +26,6 @@ public class MetaDataParserTest {
         Assert.assertEquals("The `helloworld` quickstart demonstrates the use of *CDI* and *Servlet 3* and is a good starting point to verify {productName} is configured correctly.", metaData.getSummary());
         Assert.assertEquals("https://github.com/jbossas/eap-quickstarts/", metaData.getSource());
         assertThat(metaData.getPrerequisites()).isNullOrEmpty();
+        Assert.assertTrue(metaData.isOpenshift());
     }
 }

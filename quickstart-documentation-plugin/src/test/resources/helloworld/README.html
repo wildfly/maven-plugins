@@ -438,7 +438,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sectionbody">
 <div class="quoteblock abstract">
 <blockquote>
-The <code>helloworld</code> quickstart demonstrates the use of <strong>CDI</strong> and <strong>Servlet 3</strong> and is a good starting point to verify JBoss EAP is configured correctly.
+The <code>helloworld</code> quickstart demonstrates the use of CDI and Servlet 3 and is a good starting point to verify JBoss EAP is configured correctly.
 </blockquote>
 </div>
 </div>
@@ -452,72 +452,82 @@ The <code>helloworld</code> quickstart demonstrates the use of <strong>CDI</stro
 </div>
 </div>
 <div class="sect1">
-<h2 id="_system_requirements">System Requirements</h2>
+<h2 id="system_requirements">System Requirements</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The application this project produces is designed to be run on Red Hat JBoss Enterprise Application Platform 7.1 or later.</p>
 </div>
 <div class="paragraph">
-<p>All you need to build this project is Java 8.0 (Java SDK 1.8) or later and Maven 3.1.1 or later. See <a href="https://github.com/jboss-developer/jboss-developer-shared-resources/blob/master/guides/CONFIGURE_MAVEN_JBOSS_EAP7.md#configure-maven-to-build-and-deploy-the-quickstarts">Configure Maven for JBoss EAP 7.1</a> to make sure you are configured correctly for testing the quickstarts.</p>
+<p>All you need to build this project is Java 8.0 (Java SDK 1.8) or later and Maven 3.3.1 or later. See <a href="https://github.com/jboss-developer/jboss-developer-shared-resources/blob/master/guides/CONFIGURE_MAVEN_JBOSS_EAP.adoc#configure_maven_to_build_and_deploy_the_quickstarts">Configure Maven to Build and Deploy the Quickstarts</a> to make sure you are configured correctly for testing the quickstarts.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_use_of_eap_home">Use of EAP_HOME</h2>
+<h2 id="use_of_jboss_home_name">Use of EAP_HOME</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>In the following instructions, replace <code>EAP_HOME</code> with the actual path to your JBoss EAP installation. The installation path is described in detail here: <a href="https://github.com/jboss-developer/jboss-developer-shared-resources/blob/master/guides/USE_OF_EAP_HOME.md#use-of-eap_home-and-jboss_home-variables">Use of EAP_HOME and JBOSS_HOME Variables</a>.</p>
+<p>In the following instructions, replace <code><em>EAP_HOME</em></code> with the actual path to your JBoss EAP installation. The installation path is described in detail here: <a href="https://github.com/jboss-developer/jboss-developer-shared-resources/blob/master/guides/USE_OF_EAP_HOME.adoc#use_of_product_home_and_jboss_home_variables">Use of EAP_HOME and JBOSS_HOME Variables</a>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_start_the_server">Start the Server</h2>
+<h2 id="start_the_eap_standalone_server">Start the JBoss EAP Standalone Server</h2>
 <div class="sectionbody">
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Open a command prompt and navigate to the root of the JBoss EAP directory.</p>
+<p>Open a terminal and navigate to the root of the JBoss EAP directory.</p>
 </li>
 <li>
-<p>The following shows the command line to start the server:</p>
-</li>
-</ol>
-</div>
+<p>Start the JBoss EAP server with the default profile by typing the following command.</p>
 <div class="listingblock">
 <div class="content">
-<pre>For Linux:   bin/standalone.sh
-For Windows: bin\standalone.bat</pre>
+<pre class="highlight nowrap"><code>$ <em>EAP_HOME</em>/bin/standalone.sh </code></pre>
 </div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+For Windows, use the <code><em>EAP_HOME</em>\bin\standalone.bat</code> script.
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_build_and_deploy_the_quickstart">Build and Deploy the Quickstart</h2>
+<h2 id="build_and_deploy_the_quickstart">Build and Deploy the Quickstart</h2>
 <div class="sectionbody">
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Make sure you have started the JBoss EAP server as described above.</p>
+<p>Make sure you <a href="#start_the_eap_standalone_server">start the JBoss EAP server</a> as described above.</p>
 </li>
 <li>
-<p>Open a command prompt and navigate to the root directory of this quickstart.</p>
+<p>Open a terminal and navigate to the root directory of this quickstart.</p>
 </li>
 <li>
-<p>Type this command to build and deploy the archive:</p>
-</li>
-</ol>
-</div>
+<p>Type the following command to build the artifacts.</p>
 <div class="listingblock">
 <div class="content">
-<pre>mvn clean install wildfly:deploy</pre>
+<pre class="highlight nowrap"><code>$ mvn clean package wildfly:deploy</code></pre>
 </div>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>This will deploy <code>target/helloworld.war</code> to the running instance of the server.</p>
 </li>
 </ol>
+</div>
+<div class="paragraph">
+<p>This deploys the <code>helloworld/target/helloworld.war</code> to the running instance of the server.</p>
+</div>
+<div class="paragraph">
+<p>You should see a message in the server log indicating that the archive deployed successfully.</p>
 </div>
 </div>
 </div>
@@ -530,45 +540,159 @@ For Windows: bin\standalone.bat</pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_undeploy_the_archive">Undeploy the Archive</h2>
+<h2 id="undeploy_the_quickstart">Undeploy the Quickstart</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>When you are finished testing the quickstart, follow these steps to undeploy the archive.</p>
+</div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Make sure you have started the JBoss EAP server as described above.</p>
+<p>Make sure you <a href="#start_the_eap_standalone_server">start the JBoss EAP server</a> as described above.</p>
 </li>
 <li>
-<p>Open a command prompt and navigate to the root directory of this quickstart.</p>
+<p>Open a terminal and navigate to the root directory of this quickstart.</p>
 </li>
 <li>
-<p>When you are finished testing, type this command to undeploy the archive:</p>
+<p>Type this command to undeploy the archive:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight nowrap"><code>$ mvn wildfly:undeploy</code></pre>
+</div>
+</div>
 </li>
 </ol>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre>mvn wildfly:undeploy</pre>
-</div>
-</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_run_the_quickstart_in_red_hat_jboss_developer_studio_or_eclipse">Run the Quickstart in Red Hat JBoss Developer Studio or Eclipse</h2>
+<h2 id="run_the_quickstart_in_jboss_developer_studio_or_eclipse">Run the Quickstart in Red Hat JBoss Developer Studio or Eclipse</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>You can also start the server and deploy the quickstarts or run the Arquillian tests from Eclipse using JBoss tools. For general information about how to import a quickstart, add a JBoss EAP server, and build and deploy a quickstart, see <a href="https://github.com/jboss-developer/jboss-developer-shared-resources/blob/master/guides/USE_JBDS.md#use-jboss-developer-studio-or-eclipse-to-run-the-quickstarts">Use JBoss Developer Studio or Eclipse to Run the Quickstarts</a>.</p>
+<p>You can also start the server and deploy the quickstarts or run the Arquillian tests in Red Hat JBoss Developer Studio or from Eclipse using JBoss tools. For general information about how to import a quickstart, add a JBoss EAP server, and build and deploy a quickstart, see <a href="https://github.com/jboss-developer/jboss-developer-shared-resources/blob/master/guides/USE_JBDS.adoc#use_red_hat_jboss_developer_studio_or_eclipse_to_run_the_quickstarts">Use JBoss Developer Studio or Eclipse to Run the Quickstarts</a>.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_debug_the_application">Debug the Application</h2>
+<h2 id="deploy_the_quickstart_to_openshift_online">Deploy the Quickstart to OpenShift Online</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Use these instructions to deploy the quickstart to Red Hat OpenShift Online. If you do not yet have an OpenShift Online account and are interested in signing up for one, see <a href="https://docs.openshift.com/online/getting_started/choose_a_plan.html">Choose a Plan</a> in the OpenShift Online documentation located on the Red Hat Customer Portal. For information about running JBoss EAP on Red Hat OpenShift Online, see <a href="https://access.redhat.com/documentation/en-us/jboss_enterprise_application_platform_continuous_delivery/12/html-single/getting_started_with_jboss_eap_for_openshift_online/"><em>Getting Started with JBoss EAP for OpenShift Online</em></a>, also located on the Red Hat Customer Portal.</p>
+</div>
+<div class="sect2">
+<h3 id="create_and_deploy_the_quickstart_project">Create and Deploy the Quickstart Project</h3>
+<div class="paragraph">
+<p>Follow these instructions to deploy this quickstart to OpenShift Online.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Browse to OpenShift Online console and login with your credentials.</p>
+</li>
+<li>
+<p>On the <strong>View All Projects</strong> or <strong>Welcome to Project</strong> page, click <strong>Create Project</strong>.</p>
+</li>
+<li>
+<p>On the <strong>Create Project</strong> page, enter the following information:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code><strong>Name:</strong>  helloworld
+<strong>Display Name</strong> helloworld
+<strong>Description:</strong> helloworld</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Click <strong>Create</strong> to create the project.</p>
+</li>
+<li>
+<p>On the <strong>My Projects</strong> page, choose your new <strong>helloworld</strong> and click <strong>Browse Catalog</strong>.</p>
+</li>
+<li>
+<p>Choose <strong>JBoss EAP 7.1 (no https)</strong> and then click <strong>Next</strong> to view the <strong>Information</strong> page.</p>
+</li>
+<li>
+<p>Click <strong>Next</strong> to navigate to the <strong>Configuration</strong> page. . . Enter the following information. You can leave the remaining fields as they are.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code><strong>Add to Project:</strong> helloworld
+<strong>Application Name:</strong> helloworld
+<strong>Custom http Route Hostname:</strong> (leave blank)
+<strong>Git Repository URL:</strong> https://github.com/jboss-developer/jboss-eap-quickstarts/
+<strong>Git Reference:</strong> openshift
+<strong>Context directory:</strong> helloworld</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Click the <strong>Create</strong> button.</p>
+</li>
+<li>
+<p>Click on the <strong>Continue to the project overview</strong> link.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>You should see "Build #1 is running &#8230;&#8203;" with the console log below.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>Cloning ...
+Downloading ...
+Building ...
+Copying ...
+Pushing ...</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>At the end of the build, you should see "Push successful".</p>
+</li>
+<li>
+<p>Click <strong>View Full Log</strong> to see the entire log.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Click the <strong>Overview</strong> tab to see the <code>helloworld</code> deployment.</p>
+</li>
+<li>
+<p>Click on the application URL on the right side of the page to view the running application. It should be in the following pattern:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>http://<em>APPLICATION_NAME</em>-<em>PROJECT_NAME</em>.<em>PORT</em>.<em>HOST</em>.openshiftapps.com</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="delete_the_quickstart_project">Delete the Quickstart Project</h3>
+<div class="paragraph">
+<p>Follow these instructions to delete the project from OpenShift Online.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Go to the <strong>View All Projects</strong> page and select <strong>Delete Project</strong> from the drop down list to the right of the <strong>helloworld</strong> project.</p>
+</li>
+<li>
+<p>Type the name of the project to confirm, and then click <strong>Delete</strong></p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="debug_the_application">Debug the Application</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>If you want to debug the source code of any library in the project, run the following command to pull the source into your local repository. The IDE should then detect it.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>    mvn dependency:sources</pre>
+<pre>$ mvn dependency:sources</pre>
 </div>
 </div>
 </div>
@@ -576,7 +700,7 @@ For Windows: bin\standalone.bat</pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-11-28 17:53:20 CET
+Last updated 2018-03-28 21:24:06 CEST
 </div>
 </div>
 </body>

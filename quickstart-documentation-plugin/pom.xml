@@ -38,7 +38,7 @@
         <version.dk.nykredit.jackson.dataformat>1.0.1</version.dk.nykredit.jackson.dataformat>
         <version.org.apache.httpcomponents>4.5.3</version.org.apache.httpcomponents>
         <version.org.mockito>2.8.47</version.org.mockito>
-        <version.org.jsoup>1.10.3</version.org.jsoup>
+        <version.org.jsoup>1.11.2</version.org.jsoup>
         <version.com.github.tomakehurst.wiremock>2.7.1</version.com.github.tomakehurst.wiremock>
         <version.org.slf4j.slf4j-simple>1.8.0-alpha2</version.org.slf4j.slf4j-simple>
         <version.org.assertj.assertj-core>3.8.0</version.org.assertj.assertj-core>
@@ -190,6 +190,11 @@
             <artifactId>assertj-core</artifactId>
             <version>${version.org.assertj.assertj-core}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.asciidoctor</groupId>
+            <artifactId>asciidoctorj</artifactId>
+            <version>1.5.6</version>
         </dependency>
 
     </dependencies>

@@ -5,11 +5,12 @@
 :jbossHomeName: EAP_HOME
 :productVersion: 7.1
 :buildRequirements: Java 8.0 (Java SDK 1.8) or later and Maven 3.3.1 or later
-include::../attributes.adoc[]
+include::attributes.adoc[]
 
 :level: Beginner
 :technologies: CDI, Servlet
-:source: https://github.com/jbossas/eap-quickstarts/
+:source: {githubRepoUrl}
+:openshift: true
 
 [abstract]
 The `helloworld` quickstart demonstrates the use of *CDI* and *Servlet 3* and is a good starting point to verify {productName} is configured correctly.

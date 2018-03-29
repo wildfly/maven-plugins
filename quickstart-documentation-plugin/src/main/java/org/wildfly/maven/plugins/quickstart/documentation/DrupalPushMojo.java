@@ -60,7 +60,7 @@ public class DrupalPushMojo extends AbstractMojo {
 
         try {
             Files.find(rootDirectory.toPath(), 2,
-                    (path, attributes) -> path.getFileName().endsWith("README.md")
+                    (path, attributes) -> path.getFileName().endsWith("README.adoc")
                             && !path.getParent().equals(rootDirectory.toPath())
                             && !ignoredDirs.contains(path.getParent().getFileName().toString()))
                     .parallel()

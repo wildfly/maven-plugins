@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.jboss</groupId>
         <artifactId>jboss-parent</artifactId>
-        <version>25</version>
+        <version>26</version>
         <relativePath />
     </parent>
     <groupId>org.wildfly.maven.plugins</groupId>
@@ -39,7 +39,7 @@
     </licenses>
 
     <properties>
-        <version.org.wildfly.checkstyle-config>1.0.5.Final</version.org.wildfly.checkstyle-config>
+        <version.org.wildfly.checkstyle-config>1.0.7.Final</version.org.wildfly.checkstyle-config>
     </properties>
 
     <build>
