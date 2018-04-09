@@ -36,7 +36,7 @@
         <version.org.apache.maven.plugin-tools>3.5</version.org.apache.maven.plugin-tools>
         <version.junit>4.12</version.junit>
         <version.dk.nykredit.jackson.dataformat>1.0.1</version.dk.nykredit.jackson.dataformat>
-        <version.org.apache.httpcomponents>4.5.3</version.org.apache.httpcomponents>
+        <version.org.apache.httpcomponents>4.5.5</version.org.apache.httpcomponents>
         <version.org.mockito>2.8.47</version.org.mockito>
         <version.org.jsoup>1.11.2</version.org.jsoup>
         <version.com.github.tomakehurst.wiremock>2.7.1</version.com.github.tomakehurst.wiremock>

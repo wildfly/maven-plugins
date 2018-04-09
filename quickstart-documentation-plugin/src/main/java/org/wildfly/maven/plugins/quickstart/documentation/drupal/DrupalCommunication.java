@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -170,6 +171,7 @@ public class DrupalCommunication {
                     .addHeader("X-CSRF-Token", this.csrfToken)
                     .addHeader("accept", "*/*")
                     .bodyString(json, ContentType.create("application/hal+json"));
+                    //.bodyString(json, ContentType.create("application/hal+json", "utf-8"));
             this.log.debug("postQuickstart = " + postQuickstart);
 
 
@@ -177,8 +179,12 @@ public class DrupalCommunication {
             executor.authPreemptive(this.drupalLocation);
             return executor.execute(postQuickstart).handleResponse(response -> {
                 if (response.getStatusLine().getStatusCode() != 200) {
-                    log.error(String.format("Update failed with response %s - %s",response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
-                    log.error("error: "+EntityUtils.toString(response.getEntity()));
+                    log.error(String.format("Update failed with response %s - %s", response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
+                    if (log.isDebugEnabled()) {
+                        log.info("locale: " + response.getLocale());
+                        log.info("headers: " + Arrays.asList(response.getAllHeaders()));
+                        log.info("error: " + EntityUtils.toString(response.getEntity()));
+                    }
                     return false;
                 } else {
                     return true;
