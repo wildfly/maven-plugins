@@ -65,6 +65,12 @@
       <artifactId>xnio-api</artifactId>
       <version>3.3.6.Final</version>
     </dependency>
+    <dependency>
+      <groupId>org.jboss.spec.javax.servlet</groupId>
+      <artifactId>jboss-servlet-api_4.0_spec</artifactId>
+      <version>1.0.0.Final</version>
+      <optional>true</optional>
+    </dependency>
   </dependencies>
 
   <build>

@@ -77,6 +77,13 @@ public class DependenciesResolver extends AbstractLogEnabled {
         log.info("detected artifact " + id);
       }
 
+      if (!configuration.includeOptionalDependencies && artifact.isOptional()) {
+        if (verbose) {
+          log.info("skip optional artifact " + id);
+        }
+        continue;
+      }
+
       String scope = artifact.getScope();
       if (isNotEmptyCollection(includedScopes) && !includedScopes.contains(scope)) {
         if (verbose) {
