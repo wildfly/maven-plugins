@@ -105,6 +105,12 @@ public class UpdateLicensesMojo
   private boolean includeTransitiveDependencies;
 
   /**
+   * Include optional dependencies when downloading license files.
+   */
+  @Parameter(property = "license.includeOptionalDependencies", defaultValue = "true")
+  private boolean includeOptionalDependencies;
+
+  /**
    * Get declared proxies from the {@code settings.xml} file.
    */
   @Parameter(defaultValue = "${settings.proxies}", readonly = true)
@@ -230,7 +236,9 @@ public class UpdateLicensesMojo
 
     MavenProjectDependenciesConfiguration configuration = new MavenProjectDependenciesConfiguration(
 
-            includeTransitiveDependencies, convertStringToList(includedScopes), convertStringToList(excludedScopes),
+            includeTransitiveDependencies,
+            includeOptionalDependencies,
+            convertStringToList(includedScopes), convertStringToList(excludedScopes),
             includedArtifacts,
             includedGroups,
             excludedGroups,
@@ -261,6 +269,10 @@ public class UpdateLicensesMojo
    */
   public boolean isIncludeTransitiveDependencies() {
     return includeTransitiveDependencies;
+  }
+
+  public boolean isIncludeOptionalDependencies() {
+    return includeOptionalDependencies;
   }
 
   private boolean isVerbose() {

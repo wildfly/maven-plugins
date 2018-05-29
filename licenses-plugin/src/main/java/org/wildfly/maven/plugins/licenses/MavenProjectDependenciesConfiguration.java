@@ -10,6 +10,11 @@ public class MavenProjectDependenciesConfiguration {
   public final boolean includeTransitiveDependencies;
 
   /**
+   * true if should include optional dependencies, false to include only non-optional dependencies
+   */
+  public final boolean includeOptionalDependencies;
+
+  /**
    * list of scopes to include while loading dependencies, if null, then include all scopes
    */
   public final List<String> includedScopes;
@@ -45,6 +50,7 @@ public class MavenProjectDependenciesConfiguration {
   public final boolean verbose;
 
   public MavenProjectDependenciesConfiguration(boolean includeTransitiveDependencies,
+                                               boolean includeOptionalDependencies,
                                                List<String> includedScopes,
                                                List<String> excludedScopes,
                                                String includedArtifacts,
@@ -53,6 +59,7 @@ public class MavenProjectDependenciesConfiguration {
                                                String excludedArtifacts,
                                                boolean verbose) {
     this.includeTransitiveDependencies = includeTransitiveDependencies;
+    this.includeOptionalDependencies = includeOptionalDependencies;
     this.includedScopes = includedScopes;
     this.excludedScopes = excludedScopes;
     this.includedArtifacts = includedArtifacts;
