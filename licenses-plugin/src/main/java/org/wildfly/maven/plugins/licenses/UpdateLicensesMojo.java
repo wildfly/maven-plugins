@@ -172,12 +172,11 @@ public class UpdateLicensesMojo
 
   private java.util.Properties systemProperties;
 
-  private void backupSystemProperties()
-  {
+  private void backupSystemProperties() {
     systemProperties = (java.util.Properties) System.getProperties().clone();
   }
-  private void restoreSystemProperties()
-  {
+
+  private void restoreSystemProperties() {
     if (systemProperties != null)
       System.setProperties(systemProperties);
   }
