@@ -164,6 +164,18 @@ public class UpdateLicensesMojo
    */
   private String proxyLoginPasswordEncoded;
 
+  private java.util.Properties systemProperties;
+
+  private void backupSystemProperties()
+  {
+    systemProperties = (java.util.Properties) System.getProperties().clone();
+  }
+  private void restoreSystemProperties()
+  {
+    if (systemProperties != null)
+      System.setProperties(systemProperties);
+  }
+
   protected UpdateLicensesMojo() {
     this.licensesFileWriter = new LicensesFileWriter();
     this.licensesFileReader = new LicensesFileReader();
@@ -181,48 +193,53 @@ public class UpdateLicensesMojo
       return;
     }
 
-    initProxy();
-
-    initDirectories();
-
-    Map<String, ProjectLicenseInfo> configuredDepLicensesMap = new HashMap<String, ProjectLicenseInfo>();
-
-    // License info from previous build
-    if (licensesOutputFile.exists()) {
-      loadLicenseInfo(configuredDepLicensesMap, licensesOutputFile, true);
-    }
-
-    // Manually configured license info, loaded second to override previously loaded info
-    if (licensesConfigFile.exists()) {
-      loadLicenseInfo(configuredDepLicensesMap, licensesConfigFile, false);
-    }
-
-    Collection<ProjectLicenseInfo> dependenciesLicenseInfos = getDependenciesLicenseInfos();
-
-    // The resulting list of licenses after dependency resolution
-    List<ProjectLicenseInfo> depProjectLicenses = new ArrayList<ProjectLicenseInfo>();
-
-    for (ProjectLicenseInfo dependencyLicenseInfo : dependenciesLicenseInfos) {
-      getLog().debug("Checking licenses for project " + dependencyLicenseInfo.toString());
-      String artifactProjectId = dependencyLicenseInfo.getId();
-      ProjectLicenseInfo licenseInfo;
-      if (configuredDepLicensesMap.containsKey(artifactProjectId)) {
-        licenseInfo = configuredDepLicensesMap.get(artifactProjectId);
-        licenseInfo.setVersion(dependencyLicenseInfo.getVersion());
-      } else {
-        licenseInfo = dependencyLicenseInfo;
-      }
-      depProjectLicenses.add(licenseInfo);
-    }
-
+    backupSystemProperties();
     try {
-      getLog().info("Sort licenses " + sortByGroupIdAndArtifactId);
-      if (sortByGroupIdAndArtifactId) {
-        depProjectLicenses = sortByGroupIdAndArtifactId(depProjectLicenses);
+      initProxy();
+
+      initDirectories();
+
+      Map<String, ProjectLicenseInfo> configuredDepLicensesMap = new HashMap<String, ProjectLicenseInfo>();
+
+      // License info from previous build
+      if (licensesOutputFile.exists()) {
+        loadLicenseInfo(configuredDepLicensesMap, licensesOutputFile, true);
       }
-      licensesFileWriter.writeLicenseSummary(depProjectLicenses, licensesOutputFile);
-    } catch (Exception e) {
-      throw new MojoExecutionException("Unable to write license summary file: " + licensesOutputFile, e);
+
+      // Manually configured license info, loaded second to override previously loaded info
+      if (licensesConfigFile.exists()) {
+        loadLicenseInfo(configuredDepLicensesMap, licensesConfigFile, false);
+      }
+
+      Collection<ProjectLicenseInfo> dependenciesLicenseInfos = getDependenciesLicenseInfos();
+
+      // The resulting list of licenses after dependency resolution
+      List<ProjectLicenseInfo> depProjectLicenses = new ArrayList<ProjectLicenseInfo>();
+
+      for (ProjectLicenseInfo dependencyLicenseInfo : dependenciesLicenseInfos) {
+        getLog().debug("Checking licenses for project " + dependencyLicenseInfo.toString());
+        String artifactProjectId = dependencyLicenseInfo.getId();
+        ProjectLicenseInfo licenseInfo;
+        if (configuredDepLicensesMap.containsKey(artifactProjectId)) {
+          licenseInfo = configuredDepLicensesMap.get(artifactProjectId);
+          licenseInfo.setVersion(dependencyLicenseInfo.getVersion());
+        } else {
+          licenseInfo = dependencyLicenseInfo;
+        }
+        depProjectLicenses.add(licenseInfo);
+      }
+
+      try {
+        getLog().info("Sort licenses " + sortByGroupIdAndArtifactId);
+        if (sortByGroupIdAndArtifactId) {
+          depProjectLicenses = sortByGroupIdAndArtifactId(depProjectLicenses);
+        }
+        licensesFileWriter.writeLicenseSummary(depProjectLicenses, licensesOutputFile);
+      } catch (Exception e) {
+        throw new MojoExecutionException("Unable to write license summary file: " + licensesOutputFile, e);
+      }
+    } finally {
+      restoreSystemProperties();
     }
   }
 
