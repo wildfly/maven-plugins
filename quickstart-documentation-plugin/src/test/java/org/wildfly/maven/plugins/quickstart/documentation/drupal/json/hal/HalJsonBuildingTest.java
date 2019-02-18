@@ -30,7 +30,6 @@ public class HalJsonBuildingTest {
         cr.addContibutor("Pete Muir");
         cr.addContibutor("Sande Gilda");
         cr.addLevel("Intermediate");
-        cr.addPublishDate("2017-08-10");
         cr.addResourceType("quickstart");
         cr.addTechnologies("JPA, CDI, Arquillian");
         cr.addVersion("7.0.0.");
@@ -66,8 +65,7 @@ public class HalJsonBuildingTest {
             assertThat(rootNode.path("body").findPath("format").isMissingNode()).as("property 'body[].format' is missing").isFalse();
             assertThat(rootNode.path("body").findPath("summary").isMissingNode()).as("property 'body[].summary' is missing").isFalse();
 
-            Stream.of("field_description", "field_author", "field_contributors", "field_level", "field_published_date",
-                    "field_resource_type", "field_technologies", "field_version").forEach(s -> {
+            Stream.of("field_description", "field_author", "field_contributors", "field_level", "field_resource_type", "field_technologies", "field_version").forEach(s -> {
                 assertThat(rootNode.path(s).isMissingNode()).as("property " + s + " is missing").isFalse();
                 assertThat(rootNode.path(s).isArray()).as("property " + s + " is not an array").isTrue();
                 assertThat(rootNode.path(s).findPath("value").isMissingNode()).as("property " + s + "[].value' is missing").isFalse();

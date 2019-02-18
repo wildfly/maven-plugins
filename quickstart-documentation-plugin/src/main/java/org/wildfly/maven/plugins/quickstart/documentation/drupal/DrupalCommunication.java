@@ -91,7 +91,7 @@ public class DrupalCommunication {
 
         try {
             this.log.debug("Retrieving products from Drupal");
-            final Request sitemapRequest = Request.Get(this.drupalLocation + "/drupal/products")
+            final Request sitemapRequest = Request.Get(this.drupalLocation + "/drupal/products?_format=hal_json")
                     .addHeader("X-CSRF-Token", this.csrfToken);
             final String jsonProducts = executor.execute(sitemapRequest).returnContent().asString(Charset.forName("UTF-8"));
 
@@ -112,14 +112,14 @@ public class DrupalCommunication {
 
         try {
             this.log.debug("Retrieving tags from Drupal");
-            final Request sitemapRequest = Request.Get(this.drupalLocation + "/drupal/taxonomy/tags")
+            final Request sitemapRequest = Request.Get(this.drupalLocation + "/drupal/taxonomy/tags?_format=hal_json")
                     .addHeader("X-CSRF-Token", this.csrfToken);
             final String jsonTags = executor.execute(sitemapRequest).returnContent().asString(Charset.forName("UTF-8"));
             final ObjectMapper mapper = new ObjectMapper();
             this.tags = mapper.readValue(jsonTags, new TypeReference<List<Tag>>() {
             });
         } catch (IOException e) {
-            this.log.error("Error retrieving products from Drupal", e);
+            this.log.error("Error retrieving tags from Drupal", e);
         }
 
         return this.tags;
