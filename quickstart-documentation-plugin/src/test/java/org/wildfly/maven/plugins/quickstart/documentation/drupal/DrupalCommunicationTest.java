@@ -157,7 +157,6 @@ public class DrupalCommunicationTest {
         newResource.addDescription("Some description");
         newResource.addContibutor("Sande Gilda");
         newResource.addLevel("Intermediate");
-        newResource.addPublishDate("2017-08-10");
         newResource.addTechnologies("Web Components, Java, Maven");
         newResource.addVersion("7.0.1.");
         newResource.addSourceLink("https://github.com/jboss-developer/jboss-eap-quickstarts", "");

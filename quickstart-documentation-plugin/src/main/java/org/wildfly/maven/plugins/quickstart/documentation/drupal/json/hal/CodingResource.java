@@ -46,9 +46,6 @@ public class CodingResource {
     @JsonProperty("field_level")
     private List<ValueWrapper> level;
 
-    @JsonProperty("field_published_date")
-    private List<ValueWrapper> publishDate;
-
     @JsonProperty("field_resource_type")
     private List<ValueWrapper> resourceType;
 
@@ -68,7 +65,6 @@ public class CodingResource {
         this.description = new ArrayList<>();
         this.author = new ArrayList<ValueWrapper>();
         this.contributors = new ArrayList<>();
-        this.publishDate = new ArrayList<>();
         this.resourceType = new ArrayList<>();
         this.version = new ArrayList<>();
         this.level = new ArrayList<>();
@@ -245,22 +241,6 @@ public class CodingResource {
             return "";
         }
         return this.level.get(0).getValue();
-    }
-
-    public void addPublishDate(String value) {
-        this.publishDate.add(new ValueWrapper(value));
-    }
-
-    public List<ValueWrapper> getPublishDate() {
-        return new ArrayList<>(publishDate);
-    }
-
-    @JsonIgnore
-    public String getPublishDateValue() {
-        if (this.publishDate.isEmpty()) {
-            return "";
-        }
-        return this.publishDate.get(0).getValue();
     }
 
     public void addResourceType(String value) {
