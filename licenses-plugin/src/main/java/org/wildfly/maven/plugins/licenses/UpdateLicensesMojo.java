@@ -111,6 +111,12 @@ public class UpdateLicensesMojo
   private boolean includeOptionalDependencies;
 
   /**
+   * Include the artifact of this project.
+   */
+  @Parameter(property = "license.includeSelfArtifact", defaultValue = "false")
+  private boolean includeSelfArtifact;
+
+  /**
    * Get declared proxies from the {@code settings.xml} file.
    */
   @Parameter(defaultValue = "${settings.proxies}", readonly = true)
@@ -254,6 +260,7 @@ public class UpdateLicensesMojo
 
             includeTransitiveDependencies,
             includeOptionalDependencies,
+            includeSelfArtifact,
             convertStringToList(includedScopes), convertStringToList(excludedScopes),
             includedArtifacts,
             includedGroups,
@@ -289,6 +296,10 @@ public class UpdateLicensesMojo
 
   public boolean isIncludeOptionalDependencies() {
     return includeOptionalDependencies;
+  }
+
+  public boolean isIncludeSelfArtifact() {
+    return includeSelfArtifact;
   }
 
   private boolean isVerbose() {
