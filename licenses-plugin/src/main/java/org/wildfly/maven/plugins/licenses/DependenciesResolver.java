@@ -51,7 +51,7 @@ public class DependenciesResolver extends AbstractLogEnabled {
     boolean matchInclusions = includedGroupPattern != null || includedArtifactPattern != null;
     boolean matchExclusions = excludedGroupPattern != null || excludedArtifactPattern != null;
 
-    Set<?> depArtifacts;
+    Set<Artifact> depArtifacts;
 
     if (configuration.includeTransitiveDependencies) {
       // All project dependencies
@@ -59,6 +59,10 @@ public class DependenciesResolver extends AbstractLogEnabled {
     } else {
       // Only direct project dependencies
       depArtifacts = project.getDependencyArtifacts();
+    }
+
+    if (configuration.includeSelfArtifact) {
+      depArtifacts.add(project.getArtifact());
     }
 
     List<String> includedScopes = configuration.includedScopes;

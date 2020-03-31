@@ -15,6 +15,12 @@ public class MavenProjectDependenciesConfiguration {
   public final boolean includeOptionalDependencies;
 
   /**
+   * true if the the artifact of this project should be included
+   */
+  public final boolean includeSelfArtifact;
+
+
+  /**
    * list of scopes to include while loading dependencies, if null, then include all scopes
    */
   public final List<String> includedScopes;
@@ -51,6 +57,7 @@ public class MavenProjectDependenciesConfiguration {
 
   public MavenProjectDependenciesConfiguration(boolean includeTransitiveDependencies,
                                                boolean includeOptionalDependencies,
+                                               boolean includeSelfArtifact,
                                                List<String> includedScopes,
                                                List<String> excludedScopes,
                                                String includedArtifacts,
@@ -60,6 +67,7 @@ public class MavenProjectDependenciesConfiguration {
                                                boolean verbose) {
     this.includeTransitiveDependencies = includeTransitiveDependencies;
     this.includeOptionalDependencies = includeOptionalDependencies;
+    this.includeSelfArtifact = includeSelfArtifact;
     this.includedScopes = includedScopes;
     this.excludedScopes = excludedScopes;
     this.includedArtifacts = includedArtifacts;
