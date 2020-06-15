@@ -68,6 +68,12 @@ public class UpdateLicensesMojo
   private File licensesConfigFile;
 
   /**
+   * List of input files containing a mapping between each dependency and it's license information.
+   */
+  @Parameter(property = "licensesConfigFiles")
+  private List<File> licensesConfigFiles;
+
+  /**
    * The output file containing a mapping between each dependency and it's license information.
    */
   @Parameter(property = "licensesOutputFile",
@@ -220,6 +226,14 @@ public class UpdateLicensesMojo
       // Manually configured license info, loaded second to override previously loaded info
       if (licensesConfigFile.exists()) {
         loadLicenseInfo(configuredDepLicensesMap, licensesConfigFile, false);
+      }
+
+      if (licensesConfigFiles != null) {
+        for (File licCfgFile : licensesConfigFiles) {
+          if (licCfgFile.exists()) {
+            loadLicenseInfo(configuredDepLicensesMap, licCfgFile, false);
+          }
+        }
       }
 
       Collection<ProjectLicenseInfo> dependenciesLicenseInfos = getDependenciesLicenseInfos();
