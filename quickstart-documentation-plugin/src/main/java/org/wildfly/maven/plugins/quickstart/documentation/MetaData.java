@@ -15,8 +15,7 @@ import java.util.stream.Collectors;
 import org.asciidoctor.Asciidoctor;
 import org.asciidoctor.Options;
 import org.asciidoctor.SafeMode;
-import org.asciidoctor.ast.DocumentHeader;
-import org.asciidoctor.ast.StructuredDocument;
+import org.asciidoctor.ast.Document;
 
 /**
  * @author Jason Porter <jporter@redhat.com>
@@ -35,16 +34,12 @@ public class MetaData {
 
     public static MetaData parseReadme(Path quickstartDir) throws IOException {
         Path path = quickstartDir.resolve("README.adoc");
-
         Asciidoctor asciidoctor = create();
         Options options = new Options();
         options.setSafe(SafeMode.UNSAFE);  //to enable includes
-        StructuredDocument doc = asciidoctor.readDocumentStructure(path.toFile(), options.map());
-
-        DocumentHeader header = doc.getHeader();
-
+        Document doc = asciidoctor.loadFile(path.toFile(), options.map());
         MetaData metaData = new MetaData(quickstartDir.getFileName().toString());
-        metaData.setAttributes(header.getAttributes());
+        metaData.setAttributes(doc.getAttributes());
         try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
             boolean shouldReadAbstract = false;
             for (; ; ) {
@@ -77,6 +72,8 @@ public class MetaData {
         }
         if (attributes.containsKey("technologies")) {
             technologies = attributes.get("technologies").toString().split(",");
+        } else {
+            technologies = new String[]{};
         }
         if (attributes.containsKey("level")) {
             level = attributes.get("level").toString().trim();
