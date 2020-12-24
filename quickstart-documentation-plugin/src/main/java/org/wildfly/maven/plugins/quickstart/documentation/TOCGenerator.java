@@ -21,14 +21,14 @@ public class TOCGenerator {
 
     public static void main(String[] args) throws IOException {
         Path root = Paths.get(".").normalize();
-      new TOCGenerator(Arrays.asList("target", "dist", "template", "guide")).generate(root, "[TOC-quickstart]", Paths.get("README.adoc"));
+      new TOCGenerator(Arrays.asList("target", "dist", "template", "guide")).generate(root, "[TOC-quickstart]", Paths.get("README.adoc"), false);
     }
 
     public TOCGenerator(List<String> ignoredDirs) {
         this.ignoredDirs = ignoredDirs;
     }
 
-    public void generate(Path root, String tocMarker, Path targetDoc) throws IOException {
+    public void generate(Path root, String tocMarker, Path targetDoc, boolean includeOpenshift) throws IOException {
         Set<MetaData> allMetaData = new TreeSet<>(Comparator.comparing(MetaData::getName));
         try (DirectoryStream<Path> dirs = Files.newDirectoryStream(root, entry -> Files.isDirectory(entry)
             && (!entry.getFileName().toString().startsWith("."))
@@ -46,14 +46,14 @@ public class TOCGenerator {
                 }
             });
         }
-        StringBuffer sb = generateTOC(allMetaData);
+        StringBuffer sb = generateTOC(allMetaData, includeOpenshift);
         Path tocFile = root.resolve(targetDoc);
         String tocFileContent = new String(Files.readAllBytes(tocFile), StandardCharsets.UTF_8);
         tocFileContent = tocFileContent.replaceAll("<TOC>[\\s\\S]*<\\/TOC>", "<TOC>\n"+sb.toString()+"\n//</TOC>");
         Files.write(tocFile, tocFileContent.getBytes(StandardCharsets.UTF_8));
     }
 
-    private static StringBuffer generateTOC(Set<MetaData> metaDataList) {
+    private static StringBuffer generateTOC(Set<MetaData> metaDataList, boolean includeOpenshift) {
         /*
 
 | Tables        | Are           | Cool  |
@@ -61,14 +61,24 @@ public class TOCGenerator {
 | col 3 is      | right-aligned | $1600 |
          */
         StringBuffer sb = new StringBuffer();
-        sb.append("[cols=\"1,1,2,1,1\", options=\"header\"]\n");
+        if (includeOpenshift) {
+            sb.append("[cols=\"1,1,1,2,1,1\", options=\"header\"]\n");
+        } else {
+            sb.append("[cols=\"1,1,2,1,1\", options=\"header\"]\n");
+        }
         sb.append("|===\n");
-        sb.append("| Quickstart Name | Demonstrated Technologies | Description | Experience Level Required | Prerequisites \n");
+        if (includeOpenshift) {
+            sb.append("| Quickstart Name | Demonstrated Technologies | Openshift Compatible | Description | Experience Level Required | Prerequisites \n");
+        } else {
+            sb.append("| Quickstart Name | Demonstrated Technologies | Description | Experience Level Required | Prerequisites \n");
+        }
+
         //sb.append("| --- | --- | --- | --- | --- \n");
         for (MetaData md : metaDataList) {
             sb.append("| ")
                     .append("link:").append(md.getName()).append("/README{outfilesuffix}[").append(md.getName()).append("]|")
                     .append(md.getTechnologiesAsString()).append(" | ")
+                    .append(includeOpenshift ? (md.isOpenshift() ? "Yes | " : "No | ") : "")
                     .append(md.getSummary()).append(" | ")
                     .append(md.getLevel()).append(" | ")
                     .append(md.getPrerequisites() == null ? "_none_" : md.getPrerequisites())

@@ -39,14 +39,17 @@ public class TOCMojo extends AbstractMojo {
     @Parameter(defaultValue = "target/docs/README.adoc", required = true)
     protected String targetDocument;
 
+    @Parameter
+    protected boolean includeOpenshift;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         TOCGenerator generator = new TOCGenerator(Arrays.asList("target", "dist", "template", "guide"));
         Path root = rootDirectory.toPath();
         getLog().info("root directory: " + root);
+
         try {
-            generator.generate(root, replaceMarker, Paths.get(targetDocument));
+            generator.generate(root, replaceMarker, Paths.get(targetDocument), includeOpenshift);
         } catch (IOException e) {
             throw new MojoFailureException("Could not generate TOC", e);
         }
