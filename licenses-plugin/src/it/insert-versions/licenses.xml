@@ -1,35 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <licenseSummary>
+  <knownLicenses>
+    <license name="XYZ" url="https://example.com/xyz-license.txt" />
+  </knownLicenses>
   <dependencies>
-    <dependency>
-      <groupId>aopalliance</groupId>
-      <artifactId>aopalliance</artifactId>
-      <version>1.0</version>
-      <licenses>
-        <license>
-          <name>Public Domain</name>
-        </license>
-      </licenses>
-    </dependency>
     <dependency>
       <groupId>org.jboss.xnio</groupId>
       <artifactId>xnio-api</artifactId>
-      <version>3.3.6.Final</version>
       <licenses>
         <license>
           <name>Apache License 2.0</name>
-          <url>https://www.apache.org/licenses/LICENSE-2.0</url>
         </license>
       </licenses>
     </dependency>
     <dependency>
       <groupId>org.jboss.xnio</groupId>
       <artifactId>xnio-nio</artifactId>
-      <version>3.3.6.Final</version>
       <licenses>
         <license>
           <name>XYZ</name>
-          <url>https://example.com/xyz-license.txt</url>
+          <url>https://example.com/abc-license.txt</url>
         </license>
       </licenses>
     </dependency>
