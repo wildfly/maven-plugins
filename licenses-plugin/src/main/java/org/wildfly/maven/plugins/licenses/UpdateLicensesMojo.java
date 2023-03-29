@@ -160,6 +160,12 @@ public class UpdateLicensesMojo
   private String includedArtifacts;
 
   /**
+   * Instead of adding the artifact version, add the property ${version.groupId.artifactId}.
+   * This property is expected to be replaced during Galleon provisioning.
+   */
+  @Parameter(defaultValue = "false", property = "license.generateVersionProperty")
+  private boolean generateVersionProperty;
+  /**
    * The Maven Project Object
    */
   @Parameter(defaultValue = "${project}", readonly = true)
@@ -250,6 +256,9 @@ public class UpdateLicensesMojo
           licenseInfo.setVersion(dependencyLicenseInfo.getVersion());
         } else {
           licenseInfo = dependencyLicenseInfo;
+        }
+        if (generateVersionProperty) {
+            licenseInfo.setVersion("${version."+dependencyLicenseInfo.getGroupId()+"."+dependencyLicenseInfo.getArtifactId()+"}");
         }
         depProjectLicenses.add(licenseInfo);
       }
