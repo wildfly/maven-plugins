@@ -25,7 +25,7 @@
     </parent>
     <groupId>org.wildfly.maven.plugins</groupId>
     <artifactId>maven-plugins</artifactId>
-    <version>2.3.1.Final</version>
+    <version>2.3.2.Final-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>WildFly plugins</name>
     <description>Aggregate of all wildfly util plugins</description>
