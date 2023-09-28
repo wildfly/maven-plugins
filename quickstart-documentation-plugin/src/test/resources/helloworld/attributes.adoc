@@ -29,17 +29,14 @@
 :configureBytemanQuickstartDocUrl: {guidesBaseUrl}CONFIGURE_BYTEMAN.adoc#configure_byteman_for_use_with_the_quickstarts
 :configureBytemanHaltDocUrl: {guidesBaseUrl}CONFIGURE_BYTEMAN.adoc#use_byteman_to_halt_the_application[
 :configureBytemanQuickstartsDocUrl: {guidesBaseUrl}CONFIGURE_BYTEMAN.adoc#configure_byteman_for_use_with_the_quickstarts
-
 :EESubsystemNamespace: urn:jboss:domain:ee:4.0
 :IiopOpenJdkSubsystemNamespace: urn:jboss:domain:iiop-openjdk:2.0
 :MailSubsystemNamespace: urn:jboss:domain:mail:3.0
 :SingletonSubsystemNamespace: urn:jboss:domain:singleton:1.0
 :TransactionsSubsystemNamespace: urn:jboss:domain:transactions:4.0
-
 :DocInfoProductNameURL: jboss_enterprise_application_platform_continuous_delivery
 :DocInfoProductName: JBoss Enterprise Application Platform Continuous Delivery
 :DocInfoProductNumber: 12
-
 :LinkProductDocHome: https://access.redhat.com/documentation/en/red-hat-jboss-enterprise-application-platform/
 :LinkConfigGuide: https://access.redhat.com/documentation/en-us/{DocInfoProductNameURL}/{DocInfoProductNumber}/html-single/configuration_guide/
 :LinkDevelopmentGuide: https://access.redhat.com/documentation/en-us/{DocInfoProductNameURL}/{DocInfoProductNumber}/html-single/development_guide/
@@ -49,7 +46,6 @@
 :ConfigBookName: Configuration Guide
 :DevelopmentBookName: Development Guide
 :GettingStartedBookName: Getting Started Guide
-
 :OpenShiftOnlinePlatformName: Red Hat OpenShift Container Platform
 :OpenShiftOnlineName: Red Hat OpenShift Online
 :LinkOpenShiftGuide: https://access.redhat.com/documentation/en-us/{DocInfoProductNameURL}/{DocInfoProductNumber}/html-single/getting_started_with_jboss_eap_for_openshift_container_platform/
