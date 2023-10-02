@@ -3,8 +3,11 @@ package org.wildfly.maven.plugins.licenses;
 import org.apache.maven.model.License;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.wildfly.maven.plugins.licenses.model.KnownLicenseInfo;
+import org.wildfly.maven.plugins.licenses.model.ProjectInfo;
 import org.wildfly.maven.plugins.licenses.model.ProjectLicenseInfo;
 import org.xml.sax.SAXException;
 
@@ -19,17 +22,19 @@ import java.util.List;
 public class LicensesFileReader {
 
   /**
-   * Read a component-info.xml from an input stream into a ComponentInfo object.
+   * Read a *-licenses.xml from an input stream into a ProjectInfo object.
    *
    * @param licSummaryIS Input stream containing the license data
-   * @return List of DependencyProject objects
+   * @return ProjectInfo (a list of ProjectLicenseInfo objects and a list of KnownLicenseInfo objects)
    * @throws IOException                  if there is a problem reading the InputStream
    * @throws ParserConfigurationException if there is a problem parsing the XML stream
    * @throws SAXException                 if there is a problem parsing the XML stream
    */
-  public List<ProjectLicenseInfo> parseLicenseSummary(InputStream licSummaryIS)
+  public ProjectInfo parseLicenseSummary(InputStream licSummaryIS)
           throws IOException, ParserConfigurationException, SAXException {
+    ProjectInfo projectInfo = new ProjectInfo();
     List<ProjectLicenseInfo> dependencies = new ArrayList<ProjectLicenseInfo>();
+    List<KnownLicenseInfo> knownLicenses = new ArrayList<>();
 
     DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
     DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
@@ -49,7 +54,25 @@ public class LicensesFileReader {
       }
     }
 
-    return dependencies;
+    projectInfo.setDependenciesList(dependencies);
+
+    Node knownLicensesNode = documentElement.getElementsByTagName("knownLicenses").item(0);
+    if (knownLicensesNode != null) {
+      NodeList licensesNodes = knownLicensesNode.getChildNodes();
+
+      for (int i = 0; i < licensesNodes.getLength(); ++i) {
+        Node licenseNode = licensesNodes.item(i);
+        if (licenseNode.getNodeType() == Node.ELEMENT_NODE) {
+          License license = parseLicenseFromAttrs(licenseNode);
+          List<String> aliasList = parseAliases(licenseNode);
+          knownLicenses.add(new KnownLicenseInfo(license, aliasList));
+        }
+      }
+    }
+
+    projectInfo.setKnownLicensesList(knownLicenses);
+
+    return projectInfo;
 
   }
 
@@ -97,4 +120,21 @@ public class LicensesFileReader {
     return license;
   }
 
+  private License parseLicenseFromAttrs(Node licenseNode) {
+    License license = new License();
+    NamedNodeMap map = licenseNode.getAttributes();
+    license.setName(map.getNamedItem("name").getTextContent());
+    license.setUrl(map.getNamedItem("url").getTextContent());
+    return license;
+  }
+
+  private List<String> parseAliases(Node licenseNode) {
+    List<String> aliases = new ArrayList<>();
+    NodeList aliasElements = licenseNode.getChildNodes();
+    for (int i = 0; i < aliasElements.getLength(); ++i) {
+      Node node = aliasElements.item(i);
+      aliases.add(node.getTextContent());
+    }
+    return aliases;
+  }
 }

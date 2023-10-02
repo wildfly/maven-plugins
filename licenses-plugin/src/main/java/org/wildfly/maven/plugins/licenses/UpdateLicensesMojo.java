@@ -11,6 +11,8 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.settings.Proxy;
 import org.codehaus.plexus.util.Base64;
+import org.wildfly.maven.plugins.licenses.model.KnownLicenseInfo;
+import org.wildfly.maven.plugins.licenses.model.ProjectInfo;
 import org.wildfly.maven.plugins.licenses.model.ProjectLicenseInfo;
 
 import java.io.File;
@@ -28,6 +30,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Insert versions into generated licenses.xml
@@ -223,21 +226,22 @@ public class UpdateLicensesMojo
       initDirectories();
 
       Map<String, ProjectLicenseInfo> configuredDepLicensesMap = new HashMap<String, ProjectLicenseInfo>();
+      Map<String, License> licenseAliasesMap = new HashMap<>();
 
       // License info from previous build
       if (licensesOutputFile.exists()) {
-        loadLicenseInfo(configuredDepLicensesMap, licensesOutputFile, true);
+        loadLicenseInfo(configuredDepLicensesMap, licenseAliasesMap, licensesOutputFile, true);
       }
 
       // Manually configured license info, loaded second to override previously loaded info
       if (licensesConfigFile.exists()) {
-        loadLicenseInfo(configuredDepLicensesMap, licensesConfigFile, false);
+        loadLicenseInfo(configuredDepLicensesMap, licenseAliasesMap, licensesConfigFile, false);
       }
 
       if (licensesConfigFiles != null) {
         for (File licCfgFile : licensesConfigFiles) {
           if (licCfgFile.exists()) {
-            loadLicenseInfo(configuredDepLicensesMap, licCfgFile, false);
+            loadLicenseInfo(configuredDepLicensesMap, licenseAliasesMap, licCfgFile, false);
           }
         }
       }
@@ -254,11 +258,44 @@ public class UpdateLicensesMojo
         if (configuredDepLicensesMap.containsKey(artifactProjectId)) {
           licenseInfo = configuredDepLicensesMap.get(artifactProjectId);
           licenseInfo.setVersion(dependencyLicenseInfo.getVersion());
+
+          if (!dependencyLicenseInfo.getLicenses().isEmpty()) {
+            String declaredLicenseNames = dependencyLicenseInfo.getLicenses().stream().map(License::getName)
+                    .collect(Collectors.joining(",", "'", "'"));
+            String localLicenseNames = licenseInfo.getLicenses().stream().map(License::getName)
+                    .collect(Collectors.joining(",", "'", "'"));
+
+            getLog().warn("Possible license mismatch for " + dependencyLicenseInfo + ", check that the configuration files are up to date\n" +
+                    "Declared licenses: " + declaredLicenseNames + "\n" +
+                    "Local licenses: " + localLicenseNames);
+          }
         } else {
           licenseInfo = dependencyLicenseInfo;
         }
         if (generateVersionProperty) {
             licenseInfo.setVersion("${version."+dependencyLicenseInfo.getGroupId()+"."+dependencyLicenseInfo.getArtifactId()+"}");
+        }
+
+        // adjust to canonical license info
+        List<License> declaredLicenses = licenseInfo.getLicenses();
+        Map<String, License> knownLicenses = KnownLicenses.get();
+        if (!declaredLicenses.isEmpty()) {
+          for (int i = 0; i < declaredLicenses.size(); i++) {
+            License license = declaredLicenses.get(i);
+            String licenseName = license.getName().toLowerCase();
+            License canonicalLicense = knownLicenses.containsKey(licenseName) ? knownLicenses.get(licenseName)
+                    : licenseAliasesMap.get(licenseName);
+            if (canonicalLicense != null) {
+              canonicalLicense.setDistribution(license.getDistribution());
+              canonicalLicense.setComments(license.getComments());
+              declaredLicenses.set(i, canonicalLicense);
+            } else {
+              throw new MojoExecutionException("Unknown license '" + licenseName + "' for " + dependencyLicenseInfo
+                      + ", update the configuration files");
+            }
+          }
+        } else {
+          throw new MojoExecutionException("No licenses found for " + dependencyLicenseInfo + ", update the configuration files");
         }
         depProjectLicenses.add(licenseInfo);
       }
@@ -389,22 +426,29 @@ public class UpdateLicensesMojo
    * map for dependencies with the same id. If the config file does not exist, the method does nothing.
    *
    * @param configuredDepLicensesMap A map between the dependencyId and the license info
+   * @param licenseAliasesMap        A map between the license names and licenses
    * @param licenseConfigFile        The license configuration file to load
    * @param previouslyDownloaded     Whether these licenses were already downloaded
    * @throws MojoExecutionException if could not load license infos
    */
-  private void loadLicenseInfo(Map<String, ProjectLicenseInfo> configuredDepLicensesMap, File licenseConfigFile,
-                               boolean previouslyDownloaded)
+  private void loadLicenseInfo(Map<String, ProjectLicenseInfo> configuredDepLicensesMap, Map<String, License> licenseAliasesMap,
+                               File licenseConfigFile, boolean previouslyDownloaded)
           throws MojoExecutionException {
     try (FileInputStream fis = new FileInputStream(licenseConfigFile)) {
-      List<ProjectLicenseInfo> licensesList = licensesFileReader.parseLicenseSummary(fis);
-      for (ProjectLicenseInfo dep : licensesList) {
+      ProjectInfo projectInfo = licensesFileReader.parseLicenseSummary(fis);
+      for (ProjectLicenseInfo dep : projectInfo.getDependenciesList()) {
         configuredDepLicensesMap.put(dep.getId(), dep);
         if (previouslyDownloaded) {
           for (License license : dep.getLicenses()) {
             // Save the URL so we don't download it again
             downloadedLicenseURLs.add(license.getUrl());
           }
+        }
+      }
+      for (KnownLicenseInfo knownLicenseInfo : projectInfo.getKnownLicensesList()) {
+        licenseAliasesMap.put(knownLicenseInfo.getLicense().getName().toLowerCase(), knownLicenseInfo.getLicense());
+        for (String alias : knownLicenseInfo.getAliases()) {
+          licenseAliasesMap.put(alias.toLowerCase(), knownLicenseInfo.getLicense());
         }
       }
     } catch (Exception e) {
