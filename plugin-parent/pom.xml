@@ -39,7 +39,7 @@
     </licenses>
 
     <properties>
-        <version.org.wildfly.checkstyle-config>1.0.7.Final</version.org.wildfly.checkstyle-config>
+        <version.org.wildfly.checkstyle-config>1.0.8.Final</version.org.wildfly.checkstyle-config>
     </properties>
 
     <build>
