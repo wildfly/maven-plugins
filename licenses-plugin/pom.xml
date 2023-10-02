@@ -121,7 +121,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-invoker-plugin</artifactId>
-                        <version>3.0.0</version>
+                        <version>3.6.0</version>
                         <configuration>
                             <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
                             <settingsFile>src/it/settings.xml</settingsFile>
@@ -149,7 +149,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-invoker-plugin</artifactId>
-                        <version>3.0.0</version>
+                        <version>3.6.0</version>
                         <configuration>
                             <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
                             <settingsFile>src/it/settings.xml</settingsFile>
