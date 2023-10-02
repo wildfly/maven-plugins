@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.atMost;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 /**
  * @author Jason Porter <jporter@redhat.com>
@@ -36,7 +36,7 @@ public class DrupalSitemapParserTest {
     public void testGetAllLocationsOfType() throws Exception {
         DrupalSitemapParser parser = new DrupalSitemapParser(sitemapInputstream, mavenLog);
         assertThat(parser.getAllLocationsOfType("quickstarts").size() > 0).isTrue();
-        verifyZeroInteractions(mavenLog);
+        verifyNoInteractions(mavenLog);
     }
 
     @Test
@@ -46,7 +46,7 @@ public class DrupalSitemapParserTest {
                 new SitemapEntry("/quickstarts/eap/inter-app"),
                 new SitemapEntry("/quickstarts/eap/bean-validation"),
                 new SitemapEntry("/quickstarts/eap/cdi-decorator"));
-        verifyZeroInteractions(mavenLog);
+        verifyNoInteractions(mavenLog);
     }
 
     @Test
@@ -55,7 +55,7 @@ public class DrupalSitemapParserTest {
         final List<SitemapEntry> sitemapEntries = parser.getAllLocationsOfType("quickstarts");
         assertThat(sitemapEntries.isEmpty()).isFalse();
         assertThat(sitemapEntries.containsAll(Arrays.asList("/projects", "/ticket-monster", "/video/youtube/YeD7upQJoFc"))).isFalse();
-        verifyZeroInteractions(mavenLog);
+        verifyNoInteractions(mavenLog);
     }
 
     @Test

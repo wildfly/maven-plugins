@@ -6,7 +6,6 @@
 :productVersion: 7.1
 :buildRequirements: Java 8.0 (Java SDK 1.8) or later and Maven 3.3.1 or later
 include::attributes.adoc[]
-
 :level: Beginner
 :technologies: CDI, Servlet
 :source: {githubRepoUrl}

@@ -8,8 +8,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.asciidoctor.Asciidoctor;
@@ -34,31 +36,33 @@ public class MetaData {
 
     public static MetaData parseReadme(Path quickstartDir) throws IOException {
         Path path = quickstartDir.resolve("README.adoc");
-        Asciidoctor asciidoctor = create();
-        Options options = new Options();
-        options.setSafe(SafeMode.UNSAFE);  //to enable includes
-        Document doc = asciidoctor.loadFile(path.toFile(), options.map());
-        MetaData metaData = new MetaData(quickstartDir.getFileName().toString());
-        metaData.setAttributes(doc.getAttributes());
-        try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
-            boolean shouldReadAbstract = false;
-            for (; ; ) {
-                String line = reader.readLine();
-                if (line == null) {
-                    break;
-                }
-                if (shouldReadAbstract) {
-                    metaData.summary = line;
-                    break;
-                }
-                if ("[abstract]".equals(line.trim())) {
-                    shouldReadAbstract = true;
-                    continue;
-                }
+        try (Asciidoctor asciidoctor = create()) {
+            Options options = Options.builder()
+                    .safe(SafeMode.UNSAFE) //to enable includes
+                    .build();
+            Document doc = asciidoctor.loadFile(path.toFile(), options);
+            MetaData metaData = new MetaData(quickstartDir.getFileName().toString());
+            metaData.setAttributes(doc.getAttributes());
+            try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
+                boolean shouldReadAbstract = false;
+                for (; ; ) {
+                    String line = reader.readLine();
+                    if (line == null) {
+                        break;
+                    }
+                    if (shouldReadAbstract) {
+                        metaData.summary = line;
+                        break;
+                    }
+                    if ("[abstract]".equals(line.trim())) {
+                        shouldReadAbstract = true;
+                        continue;
+                    }
 
+                }
             }
+            return metaData;
         }
-        return metaData;
     }
 
     private MetaData(String name) {
@@ -67,29 +71,13 @@ public class MetaData {
 
     private void setAttributes(Map<String, Object> attributes) {
 
-        if (attributes.containsKey("author")) {
-            author = attributes.get("author").toString();
-        }
-        if (attributes.containsKey("technologies")) {
-            technologies = attributes.get("technologies").toString().split(",");
-        } else {
-            technologies = new String[]{};
-        }
-        if (attributes.containsKey("level")) {
-            level = attributes.get("level").toString().trim();
-        }
-        if (attributes.containsKey("productName")) {
-            targetProduct = attributes.get("productName").toString().trim();
-        }
-        if (attributes.containsKey("source")) {
-            source = attributes.get("source").toString().trim().replaceAll("<", "").replaceAll(">", "");
-        }
-        if (attributes.containsKey("prerequisites")) {
-            prerequisites = attributes.get("prerequisites").toString().trim();
-        }
-        if (attributes.containsKey("openshift")) {
-            openshift = Boolean.parseBoolean(attributes.get("openshift").toString());
-        }
+        author = resolveAttribute(attributes, "author");
+        technologies = resolveAttribute(attributes, "technologies", (value) -> value == null ? new String[0] : value.toString().split(","));
+        level = resolveAttribute(attributes, "level");
+        targetProduct = resolveAttribute(attributes, "productName");
+        source = resolveAttribute(attributes, "source", (value) -> value == null ? null : value.toString().trim().replaceAll("<", "").replaceAll(">", ""));
+        prerequisites = resolveAttribute(attributes, "prerequisites");
+        openshift = resolveAttribute(attributes, "openshift", (value) -> value != null && Boolean.parseBoolean(value.toString()));
       }
 
     String getTechnologiesAsString() {
@@ -160,6 +148,14 @@ public class MetaData {
 
     public boolean isOpenshift() {
         return openshift;
+    }
+
+    private static String resolveAttribute(final Map<String, Object> attributes, final String key) {
+        return resolveAttribute(attributes, key, (value) -> value == null ? null : value.toString().trim());
+    }
+
+    private static <T> T resolveAttribute(final Map<String, Object> attributes, final String key, final Function<Object, T> resolver) {
+        return resolver.apply(attributes.get(key.toLowerCase(Locale.ROOT)));
     }
 
     @Override
